@@ -3,6 +3,7 @@ import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { signUpUser, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
+import { GoogleLogin } from 'react-google-login-component';
 
 class SignUp extends Component {
   handleFormSubmit(formProps) {
@@ -49,6 +50,14 @@ class SignUp extends Component {
             Sign up
           </button>
         </form>
+        <div>
+            <GoogleLogin socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
+                         className="google-login"
+                         scope="profile"
+                         fetchBasicProfile={true}
+                         responseHandler={this.responseGoogle}
+                         buttonText="Sign Up With Google"/>
+        </div>
       </div>
     );
   }
