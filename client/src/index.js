@@ -1,32 +1,26 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
-import App from './components/app';
-import Second from './components/second';
 import reducers from './reducers';
+import Router from './components/router';
+import { AUTH_USER } from './actions';
 import '../style/style.css';
+import 'react-widgets/dist/css/react-widgets.css';
 
 const store = createStore(reducers, {}, applyMiddleware(thunk));
-const token = localStorage.getItem('token');
+const userName = localStorage.getItem('userName');
+const password = localStorage.getItem('password');
 
-// if (token) {
-//   store.dispatch({ type: AUTH_USER });
-// }
-
+if (userName && password) {
+  store.dispatch({ type: AUTH_USER });
+}
+// store.dispatch({ type: AUTH_USER });
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <div>
-        <Switch>
-          <Route path="/second" component={Second} />
-          <Route path="/" component={App} />
-        </Switch>
-      </div>
-    </BrowserRouter>
+    <Router />
   </Provider>,
   document.querySelector('#root')
 );
