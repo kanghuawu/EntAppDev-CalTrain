@@ -1,60 +1,97 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { reduxForm, Field } from 'redux-form';
-import DropdownList from 'react-widgets/lib/DropdownList';
+import { Link, withRouter } from 'react-router-dom';
+import _ from 'lodash';
+import { reduxForm, change, Field } from 'redux-form';
+
+import { renderDropdownList, renderSelectList } from '../util/reactWidgets';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-import SignIn from '../auth/signin';
-
+import RenderAlert from './renderAlert';
+import LoginModal from './modal';
 import {
-  selectTrain,
-  deselectTrain,
-  resetSelection,
-  addTrainList
+  searchTrainList,
+  createTransaction,
+  clearSearch,
+  showModal
 } from '../../actions';
 
 class AddTrain extends Component {
-  constructor(props) {
-    super(props);
-    this.renderTrip = this.renderTrip.bind(this);
-    this.renderSegment = this.renderSegment.bind(this);
-
-    this.state = {
-      passwordModal: false
-    };
-
-    this.passwordToggle = this.passwordToggle.bind(this);
-    this.updateMyPassword = this.updateMyPassword.bind(this);
+  formatResponse(data) {
+    const startDay = String(data.startDay).split('-');
+    data.year = parseInt(startDay[0]);
+    data.month = parseInt(startDay[1]);
+    data.day = parseInt(startDay[2]);
+    const startTime = String(data.startTime).split(':');
+    const endTime = String(data.endTime).split(':');
+    data.startHour = parseInt(startTime[0]);
+    data.startMinute = parseInt(startTime[1]);
+    data.endHour = parseInt(endTime[0]);
+    data.endMinute = parseInt(endTime[1]);
+    delete data.startDay;
+    delete data.endDay;
+    delete data.startTime;
+    delete data.endTime;
+    return data;
   }
-
-  passwordToggle() {
-    this.setState({
-      passwordModal: !this.state.passwordModal
-    });
-  }
-
-  updateMyPassword() {
-    this.refs.password.getWrappedInstance().submit();
-  }
-
-  submitPassword(values) {
-    console.log(this.props);
-  }
-
-  onClick(id) {
-    console.log(this.props.auth);
-    if (this.props.auth) {
-      this.props.addTrainList(id);
+  onSubmit(formProps) {
+    if (!this.props.auth) {
+      this.props.showModal();
     } else {
-      this.passwordToggle();
+      if (!formProps.passengers) {
+        alert('Passenger is empty!');
+        return;
+      }
+      const go = JSON.parse(
+        JSON.stringify(
+          this.props.search.goTripInfoAggregation.normalTrainTrips[
+            formProps.go
+          ] ||
+            this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]
+        ) || null
+      );
+      const back = JSON.parse(
+        JSON.stringify(
+          this.props.search.backTripInfoAggregation.normalTrainTrips[
+            formProps.back
+          ] ||
+            this.props.search.backTripInfoAggregation.fastTrainTrips[
+              formProps.back
+            ] ||
+            null
+        )
+      );
+      const res = {};
+      if (go) {
+        go.segments.forEach((o, i, a) => {
+          o = this.formatResponse(o);
+        });
+        res.goSegments = go.segments;
+      } else {
+        alert('Go trip is empty!');
+        return;
+      }
+
+      if (back) {
+        back.segments.forEach((o, i, a) => {
+          o = this.formatResponse(o);
+        });
+        res.round = true;
+        res.backSegments = back.segments;
+      }
+      res.passengers = formProps.passengers;
+      const userName = localStorage.getItem('userName');
+      const password = localStorage.getItem('password');
+      res.userName = userName;
+      res.password = password;
+      this.props.createTransaction(res, () => this.props.history.push('/'));
     }
   }
 
-  onChange(id) {
-    this.props.selectTrain(id);
-  }
-  renderSegment(segment) {
+  // onChange(id) {
+  //   this.props.selectTrain(id);
+  // }
+
+  renderSegment(segment, direction) {
     return segment.map(seg => {
       return (
         <tr
@@ -82,35 +119,39 @@ class AddTrain extends Component {
     });
   }
 
-  renderTrip(trainTrip) {
-    const passengers = [1, 2, 3, 4];
-    return trainTrip.map(trip => {
+  renderTrip(trainTrips, direction) {
+    return _.map(trainTrips, trip => {
       return (
-        <li className="list-group-item" key={trip.trip_id}>
-          <Field
-            name="trip"
-            component="input"
-            type="radio"
-            value={trip.trip_id}
-            onChange={() => this.onChange(trip.trip_id)}
-          />
-          <table>
-            <thead>
-              <tr>
-                <th>Train Name</th>
-                <th>Fast</th>
-                <th>Start Day</th>
-                <th>Start Time</th>
-                <th>End Day</th>
-                <th>End Time</th>
-                <th>Start Station</th>
-                <th>End Station</th>
-                <th>Price</th>
-                <th>Tickets Left</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderSegment(trip.segments)}</tbody>
-          </table>
+        <li className="list-group-item" key={trip.segments_id}>
+          <div className="row">
+            <div className="col-auto">
+              <Field
+                name={direction ? 'go' : 'back'}
+                component="input"
+                type="radio"
+                value={trip.segments_id}
+              />
+            </div>
+            <div className="col-11">
+              <table className="table-sm table-bordered">
+                <thead>
+                  <tr>
+                    <th>Train Name</th>
+                    <th>Fast</th>
+                    <th>Start Day</th>
+                    <th>Start Time</th>
+                    <th>End Day</th>
+                    <th>End Time</th>
+                    <th>Start Station</th>
+                    <th>End Station</th>
+                    <th>Price</th>
+                    <th>Tickets Left</th>
+                  </tr>
+                </thead>
+                <tbody>{this.renderSegment(trip.segments)}</tbody>
+              </table>
+            </div>
+          </div>
         </li>
       );
     });
@@ -120,68 +161,83 @@ class AddTrain extends Component {
     if (this.props.search == null) {
       return <div>Loading...</div>;
     }
-    const { goTripInfoAggregation } = this.props.search;
+    const {
+      goTripInfoAggregation,
+      backTripInfoAggregation
+    } = this.props.search;
+    const { handleSubmit } = this.props;
+    const passengers = [1, 2, 3, 4, 5];
     return (
       <div>
-        <h3>Result</h3>
-        {goTripInfoAggregation &&
-        goTripInfoAggregation.normal && (
+        <LoginModal />
+        <form>
+          {goTripInfoAggregation &&
+          goTripInfoAggregation.normal && (
+            <div>
+              <h4>Normal Go Train</h4>
+              <ul>
+                {this.renderTrip(goTripInfoAggregation.normalTrainTrips, true)}
+              </ul>
+            </div>
+          )}
+          {goTripInfoAggregation &&
+          goTripInfoAggregation.fast && (
+            <div>
+              <h4>Fast Go Train</h4>
+              <ul>
+                {this.renderTrip(goTripInfoAggregation.fastTrainTrips, true)}
+              </ul>
+            </div>
+          )}
+          {backTripInfoAggregation &&
+          backTripInfoAggregation.normal && (
+            <div>
+              <h4>Normal Back Train</h4>
+              <ul>
+                {this.renderTrip(
+                  backTripInfoAggregation.normalTrainTrips,
+                  false
+                )}
+              </ul>
+            </div>
+          )}
+          {backTripInfoAggregation &&
+          backTripInfoAggregation.fast && (
+            <div>
+              <h4>Fast Back Train</h4>
+              <ul>
+                {this.renderTrip(backTripInfoAggregation.fastTrainTrips, false)}
+              </ul>
+            </div>
+          )}
           <div>
-            <h4>Normal Train</h4>
-            <ul>{this.renderTrip(goTripInfoAggregation.normalTrainTrips)}</ul>
-          </div>
-        )}
-        {goTripInfoAggregation &&
-        goTripInfoAggregation.fast && (
-          <div>
-            <h4>Normal Train</h4>
-            <ul>{this.renderTrip(goTripInfoAggregation.fastTrainTrips)}</ul>
-          </div>
-        )}
-        <div>
-          <Field name="passengers" component="select">
-            <option />
-            <option value={1}>1</option>
-            <option value={2}>2</option>
-            <option value={3}>3</option>
-            <option value={4}>4</option>
-          </Field>
-        </div>
-        <button
-          className="btn btn-primary"
-          disabled={!this.props.select}
-          onClick={() => this.onClick(this.props.select)}
-        >
-          Purchase
-        </button>
-        <div>
-          <Modal
-            isOpen={this.state.passwordModal}
-            toggle={this.passwordToggle}
-            className={this.props.className}
-          >
-            <ModalHeader toggle={this.passwordToggle}>
-              Update Password
-            </ModalHeader>
-            <ModalBody>
-              <SignIn
-                ref={'password'}
-                onSubmit={this.submitPassword.bind(this)}
+            <div style={{ maxWidth: '200px' }}>
+              <label>Number of Passenger</label>{' '}
+              <Field
+                data={passengers}
+                name="passengers"
+                id="passengers"
+                component={renderDropdownList}
               />
-            </ModalBody>
-            <ModalFooter>
-              <button
-                className="btn profile-btn"
-                onClick={this.updateMyPassword}
-              >
-                Update
-              </button>{' '}
-              <Button color="secondary" onClick={this.passwordToggle}>
-                Cancel
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </div>
+              {this.props.form.addtrainlist}
+            </div>
+          </div>
+          <RenderAlert />
+          <div>
+            <button
+              className="btn btn-primary"
+              onClick={handleSubmit(this.onSubmit.bind(this))}
+            >
+              Purchase
+            </button>{' '}
+            <button
+              className="btn btn-secondary"
+              onClick={() => this.props.reset}
+            >
+              Reset
+            </button>
+          </div>
+        </form>
       </div>
     );
   }
@@ -189,19 +245,19 @@ class AddTrain extends Component {
 
 const mapStatesToProps = state => {
   return {
-    auth: state.authenticated,
+    auth: state.auth.authenticated,
     search: state.search,
     select: state.select
   };
 };
 
 export default connect(mapStatesToProps, {
-  addTrainList,
-  selectTrain,
-  deselectTrain,
-  resetSelection
+  searchTrainList,
+  createTransaction,
+  clearSearch,
+  showModal
 })(
   reduxForm({
     form: 'addtrainlist'
-  })(AddTrain)
+  })(withRouter(AddTrain))
 );

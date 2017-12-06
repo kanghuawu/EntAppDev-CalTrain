@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import RenderAlert from './authAlert';
 import { signInUser, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 
 class SignIn extends Component {
-  handleFormSubmit({ email, password }) {
-    this.props.signInUser({ email, password }, () =>
+  handleFormSubmit({ userName, password }) {
+    this.props.signInUser({ userName, password }, () =>
       this.props.history.push('/')
     );
   }
@@ -38,6 +40,7 @@ class SignIn extends Component {
             Sign In
           </button>
         </form>
+        <RenderAlert />
         <div>
           <Link to="/signup" className="create-new-account">
             Create New Account
