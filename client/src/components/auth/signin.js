@@ -57,19 +57,17 @@ class SignIn extends Component {
             component={renderField}
             type="password"
           />
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="login-btn">
             Sign In
           </button>
-        </form>
-        <RenderAlert />
-        <div>
             <GoogleLogin socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
                          className="google-login"
                          scope="profile"
                          fetchBasicProfile={true}
                          responseHandler={this.responseGoogle}
-                         buttonText="Sign in With Google"/>
-        </div>
+                         buttonText="Google Login"/>
+        </form>
+        <RenderAlert />
         <div>
           <Link to="/signup" className="create-new-account">
             Create New Account

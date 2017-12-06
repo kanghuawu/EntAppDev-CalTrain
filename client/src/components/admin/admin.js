@@ -192,12 +192,14 @@ class Admin extends React.Component {
         this.setState({tempData});
     }
     render() {
-        return <div>
-            <Nav bsStyle="pills" stacked onSelect={this.handleSelect}>
-                <NavItem eventKey={1}>Cancel Train</NavItem>
-                <NavItem eventKey={2}>Reset Ticket Number</NavItem>
-                <NavItem eventKey={3}>System Report</NavItem>
-            </Nav>
+        return <div className="nav-admin-main">
+            <div className="nav-admin-tabs">
+                <Nav className="nav-admin" bsStyle="pills" stacked onSelect={this.handleSelect}>
+                    <NavItem eventKey={1}>Cancel Train</NavItem>
+                    <NavItem eventKey={2}>Reset Ticket Number</NavItem>
+                    <NavItem eventKey={3}>System Report</NavItem>
+                </Nav>
+            </div>
             <Modal
                 aria-labelledby='modal-label'
                 style={modalStyle}
@@ -212,29 +214,35 @@ class Admin extends React.Component {
             </Modal>
             {
                 this.state.data.tabNumber === "1" ? (
-                    <CancelTrain
-                        updateStateProp={this.updateState}
-                        updateDateTimeProp={this.updateDateTime}
-                        updateRadioProp={this.updateRadio}
-                        updateSubmitCancelProp={this.updateSubmitCancel}
-                        trainNameProp={this.state.data.trainName}
-                        dateTimeProp={this.state.data.dateTime}
-                    />
+                    <div className="nav-admin-content">
+                        <CancelTrain
+                            updateStateProp={this.updateState}
+                            updateDateTimeProp={this.updateDateTime}
+                            updateRadioProp={this.updateRadio}
+                            updateSubmitCancelProp={this.updateSubmitCancel}
+                            trainNameProp={this.state.data.trainName}
+                            dateTimeProp={this.state.data.dateTime}
+                        />
+                    </div>
                 ) : (
                     this.state.data.tabNumber === "2" ? (
-                        <ResetNumber
-                            updateStateProp={this.updateState}
-                            updateSubmitResetProp={this.updateSubmitReset}
-                            resetNumberProp={this.state.data.resetNumber}
-                        />
+                        <div className="nav-admin-content">
+                            <ResetNumber
+                                updateStateProp={this.updateState}
+                                updateSubmitResetProp={this.updateSubmitReset}
+                                resetNumberProp={this.state.data.resetNumber}
+                            />
+                        </div>
                     ) : (
-                        <SystemReport
-                            updateStateProp={this.updateState}
-                            updateSubmitSystemReportProp={this.updateSubmitSystemReport}
-                            srTrainNameProp={this.state.data.srTrainName}
-                            srDataProp={this.state.data.srData}
-                            srAllDataProp={this.state.data.srAllData}
-                        />
+                        <div className="nav-admin-content">
+                            <SystemReport
+                                updateStateProp={this.updateState}
+                                updateSubmitSystemReportProp={this.updateSubmitSystemReport}
+                                srTrainNameProp={this.state.data.srTrainName}
+                                srDataProp={this.state.data.srData}
+                                srAllDataProp={this.state.data.srAllData}
+                            />
+                        </div>
                     )
                 )
             }
@@ -245,25 +253,29 @@ class CancelTrain extends React.Component {
     render() {
         return (
             <div>
-                Cancel Train
-                <br/>
-                Date&Time:&nbsp;
-                <DateTimePicker
-                    name="dateTime"
-                    format="DD-MM-YYYY, HH:mm"
-                    step={15}
-                    onChange = {this.props.updateDateTimeProp}
-                />
-                <input type="radio" name="direction" value="NB" onChange = {this.props.updateRadioProp} /> NB&nbsp;
-                <input type="radio" name="direction" value="SB" onChange = {this.props.updateRadioProp} /> SB<br/>
-                Train Name:&nbsp;
-                <input type = "text"
-                    name = "trainName"
-                    value = {this.props.trainNameProp }
-                    disabled
-                />
-                <br/>
-                <button name = "submitCancel" onClick = {this.props.updateSubmitCancelProp}>Submit</button>
+                <div className="admin-content-title">Cancel Train</div>
+                <div className="admin-content-task">
+                    Date&Time:&nbsp;
+                    <DateTimePicker
+                        name="dateTime"
+                        format="DD-MM-YYYY, HH:mm"
+                        step={15}
+                        onChange = {this.props.updateDateTimeProp}
+                    />
+                </div>
+                <div className="admin-content-task">
+                    <input type="radio" name="direction" value="NB" onChange = {this.props.updateRadioProp} /> NB&nbsp;
+                    <input type="radio" name="direction" value="SB" onChange = {this.props.updateRadioProp} /> SB<br/>
+                </div>
+                <div className="admin-content-task group-item">
+                    Train Name:&nbsp;
+                    <input type = "text"
+                        name = "trainName"
+                        value = {this.props.trainNameProp }
+                        disabled
+                    />
+                </div>
+                <button className="submit-btn group-item" name = "submitCancel" onClick = {this.props.updateSubmitCancelProp}>Submit</button>
             </div>
         );
     }
@@ -272,16 +284,18 @@ class ResetNumber extends React.Component {
     render() {
         return (
             <div>
-                Please input the reset number for train ticket (5 ~ 1000):&nbsp;
-                <input  type = "number"
-                    min="5"
-                    max="1000"
-                    name = "resetNumber"
-                    value = {this.props.resetNumberProp}
-                    onChange = {this.props.updateStateProp}
-                />
-                <br/>
-                <button name = "submitReset" onClick = {this.props.updateSubmitResetProp}>Submit</button>
+                <div className="admin-content-title">Reset Ticket of Train</div>
+                <div className="admin-content-task group-item">
+                    Please input the reset number for train ticket (5 ~ 1000):&nbsp;
+                    <input  type = "number"
+                        min="5"
+                        max="1000"
+                        name = "resetNumber"
+                        value = {this.props.resetNumberProp}
+                        onChange = {this.props.updateStateProp}
+                    />
+                </div>
+                <button className="submit-btn group-item" name = "submitReset" onClick = {this.props.updateSubmitResetProp}>Submit</button>
             </div>
         );
     }
@@ -304,7 +318,7 @@ class SystemReport extends React.Component {
         }
         if (this.props.srDataProp.length >0){
             rows = [];
-            title = "Report of " +this.props.srDataProp[1].trainName;
+            title = "Report of " +this.props.srTrainNameProp;
             this.props.srDataProp.forEach(function(train){
                 rows.push(
                     <tr>
@@ -343,19 +357,21 @@ class SystemReport extends React.Component {
         }
         return (
             <div>
-                Please enter the proper train name. Type "all" for all reports
-                <br/>
-                <input type = "text"
-                       name = "srTrainName"
-                       value = {this.props.srTrainNameProp }
-                       onChange = {this.props.updateStateProp}
-                />
-                <button name = "submitSystemReport" onClick = {this.props.updateSubmitSystemReportProp}>Submit</button>
+                <div className="admin-content-title">System Report</div>
+                <div className="admin-content-task">
+                    Please enter the proper train name. Type "all" for all trains
+                    <input type = "text"
+                           name = "srTrainName"
+                           value = {this.props.srTrainNameProp }
+                           onChange = {this.props.updateStateProp}
+                    />
+                </div>
+                <button className="submit-btn" name = "submitSystemReport" onClick = {this.props.updateSubmitSystemReportProp}>Submit</button>
                 {
                     this.props.srDataProp.length >0 ? (
-                        <div>
-                            <h4>{title}</h4>
-                            <Table striped bordered condensed hover>
+                        <div className="admin-content-task">
+                            <div className="admin-table-title">{title}</div>
+                            <Table className="admin-table" striped bordered condensed hover>
                                 <thead>
                                 <tr>
                                     <th>Date</th>
@@ -394,9 +410,9 @@ class SystemReport extends React.Component {
                         </div>
                     ) : (
                         this.props.srAllDataProp.length >0 ? (
-                            <div>
-                                <h4>{title}</h4>
-                                <Table striped bordered condensed hover>
+                            <div className="admin-content-task">
+                                <div className="admin-table-title">{title}</div>
+                                <Table className="admin-table" striped bordered condensed hover>
                                     <thead>
                                     <tr>
                                         <th>Train Name</th>
@@ -409,7 +425,8 @@ class SystemReport extends React.Component {
                                 </Table>
                             </div>
                         ) :(
-                            <div>
+                            <div className="admin-content-task">
+                                <br/>
                                 No Results
                             </div>
                         )

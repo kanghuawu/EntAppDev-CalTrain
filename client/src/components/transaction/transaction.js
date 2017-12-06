@@ -126,8 +126,10 @@ class Transaction extends React.Component {
 class TransactionResult extends React.Component {
     render() {
         let rows = [];
+        let userName = "";
         if (this.props.transactionDataProp.length >0){
             rows = [];
+            userName = this.props.transactionDataProp[0].userName;
             let goRows = [];
             let goRowsCont = [];
             let backRows = [];
@@ -258,10 +260,10 @@ class TransactionResult extends React.Component {
                 rows.push(
                     <tr>
                         <td>{transaction.round ===true ? "Yes" : "No"}</td>
-                        <td data-id = {transaction.transactionId}>
+                        <td>
                             {
                                 expired ===true ?
-                                    <Button disabled>Expired</Button>
+                                    <Button className="expired-btn" disabled>Expired</Button>
                                     : (transaction.canceled ===true ?
                                     <Button bsStyle="danger" disabled>Canceled</Button>
                                     : <Button bsStyle="success" id={transaction.transactionId} onClick={ this.props.postCancelTransactionProp }>Cancel</Button>)}
@@ -285,7 +287,9 @@ class TransactionResult extends React.Component {
         }
         return (
             <div>
-                <Table responsive>
+                <div className="transaction-table-title">Transaction Record</div>
+                <div className="transaction-table-user">User Name:&nbsp;{userName}</div>
+                <Table responsive className="transaction-table">
                     <thead>
                     <tr>
                         <th>Round Trip</th>

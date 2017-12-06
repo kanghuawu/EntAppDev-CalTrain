@@ -40,6 +40,116 @@ body {
     color: rgba(255,255,255,1);
 }
 
+.google-login, .login-btn{
+    height: 46px;
+    padding: 12px 18px;
+    margin-right: 20px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 16px;
+    border: none;
+}
+.login-btn {
+    background-color: #00b1ff;
+    color: white;
+}
+.submit-btn {
+    height: 30px;
+    text-align: center;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    background-color: #00b1ff;
+    color: white;
+}
+
+.group-item {
+    float:left;
+    margin-right: 30px;
+}
+
+.expired-btn, .expired-btn:hover {
+    color: darkgrey;
+}
+
+.google-login {
+    background-color: #ff1e00;
+    color: white;
+}
+
+.transaction-table, .transaction-table-user, .transaction-table-title {
+    background-color: #eaffff;
+    color: #012fc7;
+    border: 1.2px solid #fff;
+}
+
+.transaction-table-title {
+    color: black;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.transaction-table-user {
+    color: #752424;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.nav-admin {
+    display: inline-block;
+    font-weight: bold;
+}
+
+.nav-admin-main {
+    display: block;
+    margin-top: 60px;
+}
+
+.nav-admin-tabs {
+    width: 150px;
+    float: left;
+    background-color: #fcf2ff;
+    border-radius: 10px;
+}
+
+.nav-admin-content {
+    margin-left: 30px;
+    width: 500px;
+    float: left;
+}
+
+.admin-content-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.admin-content-task {
+    margin-bottom: 15px;
+    color: #012fc7;
+    font-size: 15px;
+}
+
+.admin-content-no-content{
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: #012fc7;
+    font-size: 15px;
+}
+
+.admin-table {
+    background-color: #ddc1f0;
+}
+.admin-table-title {
+    color: black;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 28px;
+    margin-bottom: 12px;
+}
+
 .front-page-image {
     height: 650px;
     width: 100%;
