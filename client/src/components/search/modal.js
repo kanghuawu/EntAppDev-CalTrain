@@ -12,7 +12,7 @@ class LoginModal extends Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
   handleFormSubmit({ userName, password }) {
-    this.props.signInUser({ userName, password });
+    this.props.signInUser({ userName, password }, () => this.props.hideModal());
   }
   render() {
     const { handleSubmit } = this.props;
