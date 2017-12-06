@@ -18,21 +18,6 @@ const backdropStyle = {
     opacity: 0.5
 };
 
-const dialogStyle = function() {
-    // we use some psuedo random coords so nested modals
-    // don't sit right on top of each other.
-    return {
-        position: 'absolute',
-        width: 400,
-        top: 180 + 'px', left: 200 + 'px',
-        transform: `translate(-${50}%, -${50}%)`,
-        border: '1px solid #e5e5e5',
-        backgroundColor: 'white',
-        boxShadow: '0 5px 15px rgba(0,0,0,.5)',
-        padding: 20
-    };
-};
-
 class Admin extends React.Component {
     constructor(props) {
         super(props);
@@ -64,6 +49,7 @@ class Admin extends React.Component {
         this.processAllData = this.processAllData.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+        this.updateModal = this.updateModal.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
     }
     updateState(e) {
@@ -206,55 +192,53 @@ class Admin extends React.Component {
         this.setState({tempData});
     }
     render() {
-        return (
-            <div>
-                <Nav bsStyle="pills" stacked onSelect={this.handleSelect}>
-                    <NavItem eventKey={1} >Cancel Train</NavItem>
-                    <NavItem eventKey={2} >Reset Ticket Number</NavItem>
-                    <NavItem eventKey={3} >System Report</NavItem>
-                </Nav>
-                <Modal
-                    aria-labelledby='modal-label'
-                    style={modalStyle}
-                    backdropStyle={backdropStyle}
-                    show={this.state.data.showModal}
-                    onHide={this.hideModal}
-                >
-                    <div style={dialogStyle()} >
-                        <h4 id='modal-label'>{this.state.data.modalTitle}</h4>
-                        <p>{this.state.data.modalMessage}</p>
-                    </div>
-                </Modal>
-                {
-                    this.state.data.tabNumber === "1" ? (
-                        <CancelTrain
-                            updateStateProp = {this.updateState}
-                            updateDateTimeProp = {this.updateDateTime}
-                            updateRadioProp = {this.updateRadio}
-                            updateSubmitCancelProp = {this.updateSubmitCancel}
-                            trainNameProp = {this.state.data.trainName}
-                            dateTimeProp = {this.state.data.dateTime}
+        return <div>
+            <Nav bsStyle="pills" stacked onSelect={this.handleSelect}>
+                <NavItem eventKey={1}>Cancel Train</NavItem>
+                <NavItem eventKey={2}>Reset Ticket Number</NavItem>
+                <NavItem eventKey={3}>System Report</NavItem>
+            </Nav>
+            <Modal
+                aria-labelledby='modal-label'
+                style={modalStyle}
+                backdropStyle={backdropStyle}
+                show={this.state.data.showModal}
+                onHide={this.hideModal}
+            >
+                <div id="modelDialog" className="modalDialog" >
+                    <h4 id='modal-label'>{this.state.data.modalTitle}</h4>
+                    <p>{this.state.data.modalMessage}</p>
+                </div>
+            </Modal>
+            {
+                this.state.data.tabNumber === "1" ? (
+                    <CancelTrain
+                        updateStateProp={this.updateState}
+                        updateDateTimeProp={this.updateDateTime}
+                        updateRadioProp={this.updateRadio}
+                        updateSubmitCancelProp={this.updateSubmitCancel}
+                        trainNameProp={this.state.data.trainName}
+                        dateTimeProp={this.state.data.dateTime}
+                    />
+                ) : (
+                    this.state.data.tabNumber === "2" ? (
+                        <ResetNumber
+                            updateStateProp={this.updateState}
+                            updateSubmitResetProp={this.updateSubmitReset}
+                            resetNumberProp={this.state.data.resetNumber}
                         />
-                    ): (
-                        this.state.data.tabNumber === "2" ? (
-                            <ResetNumber
-                                updateStateProp = {this.updateState}
-                                updateSubmitResetProp = {this.updateSubmitReset}
-                                resetNumberProp = {this.state.data.resetNumber}
-                            />
-                        ) : (
-                            <SystemReport
-                                updateStateProp = {this.updateState}
-                                updateSubmitSystemReportProp = {this.updateSubmitSystemReport}
-                                srTrainNameProp = {this.state.data.srTrainName}
-                                srDataProp = {this.state.data.srData}
-                                srAllDataProp = {this.state.data.srAllData}
-                            />
-                        )
+                    ) : (
+                        <SystemReport
+                            updateStateProp={this.updateState}
+                            updateSubmitSystemReportProp={this.updateSubmitSystemReport}
+                            srTrainNameProp={this.state.data.srTrainName}
+                            srDataProp={this.state.data.srData}
+                            srAllDataProp={this.state.data.srAllData}
+                        />
                     )
-                }
-            </div>
-        );
+                )
+            }
+        </div>;
     }
 }
 class CancelTrain extends React.Component {

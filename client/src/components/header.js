@@ -28,11 +28,16 @@ class Header extends Component {
   renderLinks() {
     if (this.props.authenticated) {
       return [
-        <NavItem key={7}>
+        <NavItem key={6}>
           <NavLink to="/signout" tag={Link}>
             Sign out
           </NavLink>
-        </NavItem>
+        </NavItem>,
+          <NavItem key={7}>
+              <NavLink to="/transaction" tag={Link}>
+                  Transaction
+              </NavLink>
+          </NavItem>
       ];
     } else {
       return [
@@ -52,7 +57,7 @@ class Header extends Component {
   render() {
     return (
       <div>
-        <Navbar color="faded" light expand="md">
+        <Navbar id = "navbar" color="faded" light expand="md">
           <NavbarToggler onClick={this.toggle} />
           <NavbarBrand to="/" tag={Link}>
             CalTrain Ticket Machine
@@ -65,11 +70,6 @@ class Header extends Component {
                 </NavLink>
               </NavItem>
               <NavItem key={2}>
-                <NavLink to="/transaction" tag={Link}>
-                  Transaction
-                </NavLink>
-              </NavItem>
-              <NavItem key={3}>
                 <NavLink to="/admin" tag={Link}>
                   Admin
                 </NavLink>

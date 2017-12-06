@@ -1,9 +1,43 @@
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background: #c6fcff; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#c6fcff, #dbdbdb); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#c6fcff, #dbdbdb); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#c6fcff, #dbdbdb); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#c6fcff, #dbdbdb); /* Standard syntax */
+
+}
+#navbar {
+    width: 100%;
+    background-color: #047c8b;
+    color: rgba(255,255,255,1);
+}
+
+#navbar .navbar-brand, #navbar .nav-item a {
+    color: rgba(255,255,255,1);
+}
+
 caption {
     display: table-caption;
     text-align: center;
     margin-top: 10px;
     margin-bottom: 10px;
     color: darkred;
+}
+.modalDialog {
+    position: absolute;
+    width: 400px;
+    top: 180px;
+    left: 200px;
+    transform: translate(-50%, -50%);
+    border: 1px solid #e5e5e5;
+    background-color: white;
+    box-Shadow: 0 5px 15px rgba(0,0,0,.5);
+    padding: 20px;
 }
 .error {
     color: red;
