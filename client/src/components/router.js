@@ -7,23 +7,25 @@ import Signin from './auth/signin';
 import Signout from './auth/signout';
 import RequireAuth from './auth/requireAuth';
 import Search from './search';
+import Admin from './admin/admin.js';
 import App from './app';
 
 export default () => {
-  return (
-    <BrowserRouter>
-      <div className="container">
-        <Header />
-        <div style={{ marginTop: '30px' }}>
-          <Switch>
-            <Route path="/signup" component={Signup} />
-            <Route path="/signin" component={Signin} />
-            <Route path="/signout" component={Signout} />
-            <Route path="/search" component={Search} />
-            <Route path="/" component={App} />
-          </Switch>
-        </div>
-      </div>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <div className="container">
+                <Header />
+                <div style={{ marginTop: '30px' }}>
+                    <Switch>
+                        <Route path="/signup" component={Signup} />
+                        <Route path="/signin" component={Signin} />
+                        <Route path="/signout" component={Signout} />
+                        <Route path="/search" component={Search} />
+                        <Route path="/admin" component={Admin} />
+                        <Route path="/" component={App} />
+                    </Switch>
+                </div>
+            </div>
+        </BrowserRouter>
+    );
 };

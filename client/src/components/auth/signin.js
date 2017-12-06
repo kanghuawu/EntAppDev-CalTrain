@@ -6,12 +6,33 @@ import { Link } from 'react-router-dom';
 import RenderAlert from './authAlert';
 import { signInUser, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
+import { GoogleLogin } from 'react-google-login-component';
 
 class SignIn extends Component {
   handleFormSubmit({ userName, password }) {
     this.props.signInUser({ userName, password }, () =>
       this.props.history.push('/')
     );
+  }
+
+  responseGoogle (googleUser) {
+      let id_token = googleUser.getAuthResponse().id_token;
+      console.log({accessToken: id_token});
+      let profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+      //anything else you want to do(save to localStorage)...
+      // this.handleFormSubmit(
+      //       {
+      //          "userName": profile.getEmail(),
+      //          "password": (profile.getEmail() + profile.getName())
+      //       }
+      //     );
+      // this.props.signInUser({ "userName": profile.getEmail(), "password": profile.getName() }, () =>
+      //     this.props.history.push('/')
+      // );
   }
 
   render() {
@@ -41,6 +62,14 @@ class SignIn extends Component {
           </button>
         </form>
         <RenderAlert />
+        <div>
+            <GoogleLogin socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
+                         className="google-login"
+                         scope="profile"
+                         fetchBasicProfile={true}
+                         responseHandler={this.responseGoogle}
+                         buttonText="Sign in With Google"/>
+        </div>
         <div>
           <Link to="/signup" className="create-new-account">
             Create New Account
