@@ -8,6 +8,7 @@ import Signout from './auth/signout';
 import RequireAuth from './auth/requireAuth';
 import Search from './search';
 import Admin from './admin/admin.js';
+import Transaction from './transaction/transaction.js';
 import App from './app';
 
 export default () => {
@@ -22,6 +23,7 @@ export default () => {
                         <Route path="/signout" component={Signout} />
                         <Route path="/search" component={Search} />
                         <Route path="/admin" component={Admin} />
+                        <Route path="/transaction" component={Transaction} />
                         <Route path="/" component={App} />
                     </Switch>
                 </div>

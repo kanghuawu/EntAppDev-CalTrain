@@ -65,8 +65,8 @@ class Header extends Component {
                 </NavLink>
               </NavItem>
               <NavItem key={2}>
-                <NavLink to="/cancel" tag={Link}>
-                  Cancel
+                <NavLink to="/transaction" tag={Link}>
+                  Transaction
                 </NavLink>
               </NavItem>
               <NavItem key={3}>
