@@ -5,8 +5,11 @@ import AddTrain from './addTrain';
 
 export default () => {
   return (
-    <div>
+    <div style={{ marginBottom: '300px' }}>
+      <h1>Search</h1>
       <SearchTrain />
+      <hr />
+      <h1>Result</h1>
       <AddTrain />
     </div>
   );

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
+
+import RenderAlert from './authAlert';
 import { signUpUser, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
@@ -46,6 +48,7 @@ class SignUp extends Component {
             component={renderField}
             type="password"
           />
+          <RenderAlert />
           <button action="submit" className="btn btn-primary">
             Sign up
           </button>

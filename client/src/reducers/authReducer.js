@@ -12,7 +12,7 @@ export default (state = {}, action) => {
     case UNAUTH_USER:
       return { ...state, authenticated: false };
     case AUTH_ERROR:
-      return { ...state, error: _.values(action.payload) };
+      return { ...state, error: action.payload };
     case CLEAR_AUTH_ERROR:
       return { ...state, error: [] };
     default:

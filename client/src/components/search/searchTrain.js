@@ -3,65 +3,34 @@ import { connect } from 'react-redux';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import DropdownList from 'react-widgets/lib/DropdownList';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 
-import renderField from '../util/formHelper';
-import renderSelectField from '../util/formSelectHelper';
-
+import { renderDropdownList, renderDateTimePicker } from '../util/reactWidgets';
 import { searchTrainList, clearSearch } from '../../actions';
+import station from './stationList';
 
 moment.locale('en');
 momentLocalizer(moment);
 
-const formatter = moment().format('MM DD YYYY, h:mm');
-
-const renderDropdownList = ({ input, data, valueField, textField }) => (
-  <DropdownList
-    {...input}
-    data={data}
-    valueField={valueField}
-    textField={textField}
-    onChange={input.onChange}
-  />
-);
-
-const renderSelectList = ({ input, data }) => (
-  <SelectList {...input} onBlur={() => input.onBlur()} data={data} />
-);
-
-const renderDateTimePicker = ({ input: { onChange, value }, showTime }) => (
-  <DateTimePicker
-    onChange={onChange}
-    format="DD MMM YYYY, hh:mm"
-    time={showTime}
-    value={!value ? null : new Date(value)}
-  />
-);
-
-function formatTime(date) {
-  const newTime = {};
-  newTime.goYear = date.getFullYear();
-  newTime.goMonth = date.getMonth();
-  newTime.goDay = date.getDate();
-  newTime.goHour = date.getHours();
-  newTime.goMinute = date.getMinutes();
-  return newTime;
-}
-
 class SearchTrain extends Component {
-  componentWillMount() {
-    this.props.clearSearch();
+  formatTime(date) {
+    const newTime = {};
+    newTime.goYear = date.getFullYear();
+    newTime.goMonth = date.getMonth();
+    newTime.goDay = date.getDate();
+    newTime.goHour = date.getHours();
+    newTime.goMinute = date.getMinutes();
+    return newTime;
   }
+
   onSubmit(searchTrain, formProps) {
     if (formProps.goTime) {
-      const newGoTime = formatTime(formProps.goTime);
+      const newGoTime = this.formatTime(formProps.goTime);
       delete formProps.goTime;
       Object.assign(formProps, newGoTime);
     }
 
     if (formProps.backTime) {
-      const newBackTime = formatTime(formProps.backTime);
+      const newBackTime = this.formatTime(formProps.backTime);
       delete formProps.backTime;
       Object.assign(formProps, newBackTime);
     }
@@ -70,6 +39,7 @@ class SearchTrain extends Component {
       this.props.searchTrainList(formProps);
     }
   }
+
   onReset() {
     this.props.reset();
   }
@@ -77,11 +47,9 @@ class SearchTrain extends Component {
   render() {
     const { isRound, handleSubmit } = this.props;
     const searchTrain = true;
-    const station = ['1', '2', '3', '4'];
     const connection = [1, 2, 3];
     return (
       <div style={{ maxWidth: '500px' }}>
-        <h3>Search</h3>
         <form>
           <div>
             <div>

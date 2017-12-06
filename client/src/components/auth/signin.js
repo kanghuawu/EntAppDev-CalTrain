@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+import RenderAlert from './authAlert';
 import { signInUser, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
 
 class SignIn extends Component {
-  handleFormSubmit({ email, password }) {
-    this.props.signInUser({ email, password }, () =>
+  handleFormSubmit({ userName, password }) {
+    this.props.signInUser({ userName, password }, () =>
       this.props.history.push('/')
     );
   }
@@ -59,6 +61,7 @@ class SignIn extends Component {
             Sign In
           </button>
         </form>
+        <RenderAlert />
         <div>
             <GoogleLogin socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
                          className="google-login"

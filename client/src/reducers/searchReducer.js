@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { SEARCH_LIST, DESELECT_SEARCH, CLEAR_SEARCH } from '../actions';
+import { SEARCH_LIST, TXN_ERROR, CLEAR_SEARCH } from '../actions';
 
 const guid = () => {
   const s4 = () => {
@@ -23,26 +23,43 @@ const guid = () => {
   );
 };
 
+function format(old) {
+  const newtrip = old.map(seg => {
+    seg.segments_id = guid();
+    return seg;
+  });
+  return _.mapKeys(newtrip, 'segments_id');
+}
+
 export default (state = {}, action) => {
   switch (action.type) {
     case SEARCH_LIST:
-      if (action.payload.goTripInfoAggregation.normalTrainTrips) {
-        action.payload.goTripInfoAggregation.normalTrainTrips.forEach(
-          (o, i, a) => {
-            a[i] = Object.assign(a[i], { trip_id: guid() });
-          }
+      const data = action.payload;
+      if (data.round) {
+        if (data.backTripInfoAggregation.normal) {
+          data.backTripInfoAggregation.normalTrainTrips = format(
+            data.backTripInfoAggregation.normalTrainTrips
+          );
+        }
+        if (data.backTripInfoAggregation.fast) {
+          data.backTripInfoAggregation.fastTrainTrips = format(
+            data.backTripInfoAggregation.fastTrainTrips
+          );
+        }
+      }
+      if (data.goTripInfoAggregation.normal) {
+        data.goTripInfoAggregation.normalTrainTrips = format(
+          data.goTripInfoAggregation.normalTrainTrips
         );
       }
-      if (action.payload.goTripInfoAggregation.fastTrainTrips) {
-        action.payload.goTripInfoAggregation.fastTrainTrips.forEach(
-          (o, i, a) => {
-            a[i] = Object.assign(a[i], { trip_id: guid() });
-          }
+      if (data.goTripInfoAggregation.fast) {
+        data.goTripInfoAggregation.fastTrainTrips = format(
+          data.goTripInfoAggregation.fastTrainTrips
         );
       }
-      return action.payload;
-    case DESELECT_SEARCH:
-      return { ...state, results: _.omit(state.results, action.payload) };
+      return { ...data };
+    case TXN_ERROR:
+      return { ...state, error: action.payload };
     case CLEAR_SEARCH:
       return {};
     default:
