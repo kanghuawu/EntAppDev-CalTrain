@@ -11,14 +11,44 @@ body {
     background: linear-gradient(#c6fcff, #dbdbdb); /* Standard syntax */
 
 }
+
 #navbar {
+    height: 70px;
     width: 100%;
-    background-color: #047c8b;
+    font-size: 17px;
+    background: linear-gradient(to right, #047c8b, #047c8b, #047c8b, #c6fcff);
     color: rgba(255,255,255,1);
+    border-bottom: 0px;
+    border-right: 0px;
+}
+
+#navbar .navbar-brand {
+    font-size: 25px;
+    font-weight: bold;
+    margin-right: 45px;
+}
+
+#navbar .nav-item a {
+    margin-left: 20px;
+}
+#navbar .navbar-nav {
+    margin-left: 20px;
 }
 
 #navbar .navbar-brand, #navbar .nav-item a {
+    vertical-align: top;
     color: rgba(255,255,255,1);
+}
+
+.front-page-image {
+    height: 650px;
+    width: 100%;
+    border-radius: 20px;
+}
+
+.logo-image {
+    height: 60px;
+    width: 70px;
 }
 
 caption {

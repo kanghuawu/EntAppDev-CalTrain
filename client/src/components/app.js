@@ -20,7 +20,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <h1 className="error">Hello World</h1>
+        <img className="front-page-image" src="/assets/background.jpg" />
       </div>
     );
   }

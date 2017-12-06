@@ -57,27 +57,28 @@ class Header extends Component {
   render() {
     return (
       <div>
-        <Navbar id = "navbar" color="faded" light expand="md">
-          <NavbarToggler onClick={this.toggle} />
-          <NavbarBrand to="/" tag={Link}>
-            CalTrain Ticket Machine
-          </NavbarBrand>
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem key={1}>
-                <NavLink to="/search" tag={Link}>
-                  Search
-                </NavLink>
-              </NavItem>
-              <NavItem key={2}>
-                <NavLink to="/admin" tag={Link}>
-                  Admin
-                </NavLink>
-              </NavItem>
-              {this.renderLinks()}
-            </Nav>
-          </Collapse>
-        </Navbar>
+          <Navbar id = "navbar" color="faded" light expand="md">
+              <img className="logo-image" src="/assets/logo.png" />
+              <NavbarToggler onClick={this.toggle} />
+              <NavbarBrand to="/" tag={Link}>
+                CUSR
+              </NavbarBrand>
+              <Collapse isOpen={this.state.isOpen} navbar>
+                <Nav className="ml-auto" navbar>
+                  <NavItem key={1}>
+                    <NavLink to="/search" tag={Link}>
+                      Search
+                    </NavLink>
+                  </NavItem>
+                  <NavItem key={2}>
+                    <NavLink to="/admin" tag={Link}>
+                      Admin
+                    </NavLink>
+                  </NavItem>
+                  {this.renderLinks()}
+                </Nav>
+              </Collapse>
+          </Navbar>
       </div>
     );
   }

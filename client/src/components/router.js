@@ -14,7 +14,6 @@ import App from './app';
 export default () => {
     return (
         <BrowserRouter>
-
             <div className="container">
                 <Header />
                 <div style={{ marginTop: '30px' }}>
