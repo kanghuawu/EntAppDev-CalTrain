@@ -74,7 +74,7 @@ class SignIn extends Component {
             Sign In
           </button>
           <GoogleLogin
-            socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
+            socialId="877820270659-q57dfenenfg5rm30rkpp6cvm292m4aia.apps.googleusercontent.com"
             className="google-login"
             scope="profile"
             fetchBasicProfile={true}
