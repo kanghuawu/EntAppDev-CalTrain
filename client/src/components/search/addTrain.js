@@ -33,6 +33,7 @@ class AddTrain extends Component {
     delete data.endTime;
     return data;
   }
+
   onSubmit(formProps) {
     if (!this.props.auth) {
       this.props.showModal();
@@ -113,7 +114,7 @@ class AddTrain extends Component {
           }
         >
           <th>{seg.trainName}</th>
-          <th>{seg.fast}</th>
+          <th>{seg.fast? "Yes": "No"}</th>
           <th>{seg.startDay}</th>
           <th>{seg.startTime}</th>
           <th>{seg.endDay}</th>

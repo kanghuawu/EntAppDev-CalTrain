@@ -137,7 +137,7 @@ export const createTransaction = (data, callback) => {
   return dispatch => {
     axios.post(`${ROOT_URL}/api/transaction/create`, data).then(response => {
       // console.log(response);
-      if (response.result) {
+      if (response.data.result) {
         callback();
       } else {
         dispatch(txnError(response.data.reason));
