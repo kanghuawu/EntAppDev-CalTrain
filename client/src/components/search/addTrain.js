@@ -66,6 +66,7 @@ class AddTrain extends Component {
           o = this.formatResponse(o);
         });
         res.goSegments = go.segments;
+        res.round = false;
       } else {
         alert('Go trip is empty!');
         return;
@@ -83,7 +84,9 @@ class AddTrain extends Component {
       const password = localStorage.getItem('password');
       res.userName = userName;
       res.password = password;
-      this.props.createTransaction(res, () => this.props.history.push('/'));
+      this.props.createTransaction(res, () =>
+        this.props.history.push('/transaction')
+      );
     }
   }
 
