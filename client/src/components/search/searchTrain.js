@@ -8,14 +8,14 @@ import { renderDropdownList, renderDateTimePicker } from '../util/reactWidgets';
 import { searchTrainList, clearSearch } from '../../actions';
 import station from './stationList';
 
-moment.locale('en');
-momentLocalizer(moment);
+// moment.locale('en');
+// momentLocalizer(moment);
 
 class SearchTrain extends Component {
   formatTime(date) {
     const newTime = {};
     newTime.goYear = date.getFullYear();
-    newTime.goMonth = date.getMonth();
+    newTime.goMonth = date.getMonth() + 1;
     newTime.goDay = date.getDate();
     newTime.goHour = date.getHours();
     newTime.goMinute = date.getMinutes();
@@ -23,6 +23,7 @@ class SearchTrain extends Component {
   }
 
   onSubmit(searchTrain, formProps) {
+    console.log(formProps);
     if (formProps.goTime) {
       const newGoTime = this.formatTime(formProps.goTime);
       delete formProps.goTime;
