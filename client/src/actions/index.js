@@ -22,7 +22,7 @@ export const CREATE_TRANSACTION = 'create_transaction';
 export const TXN_ERROR = 'txn_error';
 
 export const signInUser = ({ userName, password }, callback) => {
-  console.log('singsing');
+  // console.log('singsing');
   return dispatch => {
     axios
       .post(`${ROOT_URL}/api/user/authenticate`, { userName, password })
@@ -136,7 +136,7 @@ export const hideModal = () => {
 export const createTransaction = (data, callback) => {
   return dispatch => {
     axios.post(`${ROOT_URL}/api/transaction/create`, data).then(response => {
-      console.log(response);
+      // console.log(response);
       if (response.result) {
         callback();
       } else {

@@ -49,19 +49,24 @@ class AddTrain extends Component {
             this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]
         ) || null
       );
-      const back = JSON.parse(
+
+      let back = {};
+      if (formProps.back) {
+        back = JSON.parse(
         JSON.stringify(
-          this.props.search.backTripInfoAggregation.normalTrainTrips[
-            formProps.back
-          ] ||
-            this.props.search.backTripInfoAggregation.fastTrainTrips[
+            this.props.search.backTripInfoAggregation.normalTrainTrips[
               formProps.back
             ] ||
-            null
-        )
-      );
+              this.props.search.backTripInfoAggregation.fastTrainTrips[
+                formProps.back
+              ] ||
+              null
+          )
+        );
+      }
+      
       const res = {};
-      if (go) {
+      if (formProps.go) {
         go.segments.forEach((o, i, a) => {
           o = this.formatResponse(o);
         });
@@ -72,7 +77,7 @@ class AddTrain extends Component {
         return;
       }
 
-      if (back) {
+      if (formProps.back) {
         back.segments.forEach((o, i, a) => {
           o = this.formatResponse(o);
         });

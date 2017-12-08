@@ -59,7 +59,7 @@ class LoginModal extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state.modal);
+  // console.log(state.modal);
   return {
     modal: state.modal.display
   };
