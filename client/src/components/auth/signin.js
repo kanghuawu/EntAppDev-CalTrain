@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import RenderAlert from './authAlert';
-import { signInUser, clearAuthError } from '../../actions';
+import { signInUser, signInGoogle, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
 import axios from "axios/index";
@@ -26,26 +26,14 @@ class SignIn extends Component {
     let id_token = googleUser.getAuthResponse().id_token;
     console.log({ accessToken: id_token });
     let profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    // console.log('Name: ' + profile.getName());
+    // console.log('Image URL: ' + profile.getImageUrl());
+    // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     //anything else you want to do(save to localStorage)...
-      axios
-          .post(`${ROOT_URL}/api/user/google`, { userName: profile.getName, password: profile.getId(), email: profile.getEmail() })
-          .then(response => {
-              localStorage.setItem('userName', userName);
-              localStorage.setItem('password', password);
-              if (response.data.result) {
-                  dispatch({ type: AUTH_USER });
-                  if (callback) callback();
-              } else {
-                  dispatch(authError(response.data.reason));
-              }
-          })
-          .catch(error => {
-              console.log(error);
-          });
+      this.props.signInGoogle({ userName: profile.getName(), password: profile.getId(), email: profile.getEmail() }, () =>
+          this.props.history.push('/transaction')
+      );
   }
 
   render() {
@@ -104,7 +92,7 @@ const validate = value => {
   return errors;
 };
 
-export default connect(null, { signInUser, clearAuthError })(
+export default connect(null, { signInUser, signInGoogle, clearAuthError })(
   reduxForm({
     form: 'signin',
     validate
