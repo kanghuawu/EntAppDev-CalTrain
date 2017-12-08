@@ -23,7 +23,10 @@ export default () => {
                         <Route path="/signout" component={Signout} />
                         <Route path="/search" component={Search} />
                         <Route path="/admin" component={Admin} />
-                        <Route path="/transaction" component={Transaction} />
+                        <Route
+                            path="/transaction"
+                            component={RequireAuth(Transaction)}
+                        />
                         <Route path="/" component={App} />
                     </Switch>
                 </div>
