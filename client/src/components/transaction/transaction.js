@@ -73,6 +73,7 @@ class Transaction extends React.Component {
                 console.log(error);
                 msg = "fail!";
             });
+        this.getTransactionData();
     }
     processCancelTransactoin(response){
         console.log(response);
