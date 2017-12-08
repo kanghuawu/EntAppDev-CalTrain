@@ -26,14 +26,16 @@ class Admin extends React.Component {
             data: {
                 showModal: false,
                 modalTitle: "Modal Title",
-                modalMessage: "Modal Message",
+                modalSubTitle: "Modal SubTitle",
+                modalMessage: [],
                 tabNumber: "1",
+                cancelTrainName: "",
                 trainName: "",
                 direction: "NB",
                 dateTime: new Date(),
                 resetNumber : 1000,
                 srDirection: "NB",
-                srTrainName: "",
+                systemReportTrainName: "",
                 srData: [],
                 srAllData: []
             }
@@ -41,13 +43,17 @@ class Admin extends React.Component {
         this.updateState = this.updateState.bind(this);
         this.updateDateTime = this.updateDateTime.bind(this);
         this.updateRadio = this.updateRadio.bind(this);
-        this.updateSRRadio = this.updateSRRadio.bind(this);
-        this.updateSubmitReset = this.updateSubmitReset.bind(this);
         this.updateSubmitCancel = this.updateSubmitCancel.bind(this);
-        this.updateSubmitSystemReport = this.updateSubmitSystemReport.bind(this);
         this.processCancelResult = this.processCancelResult.bind(this);
+        this.processCancelResultError = this.processCancelResultError.bind(this);
+        this.updateSubmitReset = this.updateSubmitReset.bind(this);
+        this.processResetResult = this.processResetResult.bind(this);
+        this.processResetError = this.processResetError.bind(this);
+        this.updateSubmitSystemReport = this.updateSubmitSystemReport.bind(this);
         this.processReportData = this.processReportData.bind(this);
         this.processAllData = this.processAllData.bind(this);
+        this.processSystemReportError = this.processSystemReportError.bind(this);
+
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.updateModal = this.updateModal.bind(this);
@@ -64,7 +70,7 @@ class Admin extends React.Component {
         if (date.valueOf() > current.valueOf()){
             let tempData = this.state.data;
             tempData['dateTime'] = date;
-            tempData['trainName'] = tempData['direction'] + ('0' + date.getHours()).slice(-2) + ('0' + date.getMinutes()).slice(-2);
+            tempData['cancelTrainName'] = tempData['direction'] + ('0' + date.getHours()).slice(-2) + ('0' + date.getMinutes()).slice(-2);
             this.setState({tempData});
             console.log(this.state.data);
         }
@@ -77,32 +83,51 @@ class Admin extends React.Component {
     updateRadio(e){
         let tempData = this.state.data;
         tempData['direction'] = e.target.value;
-        tempData['trainName'] = tempData['direction'] + ('0' + tempData['dateTime'].getHours()).slice(-2) + ('0' + tempData['dateTime'].getMinutes()).slice(-2);
-        this.setState({tempData});
-    }
-    updateSRRadio(e){
-        let tempData = this.state.data;
-        tempData['srDirection'] = e.target.value;
-        tempData['srTrainName'] = tempData['srDirection'] + ('0' + tempData['dateTime'].getHours()).slice(-2) + ('0' + tempData['dateTime'].getMinutes()).slice(-2);
+        tempData['cancelTrainName'] = tempData['direction'] + ('0' + tempData['dateTime'].getHours()).slice(-2) + ('0' + tempData['dateTime'].getMinutes()).slice(-2);
         this.setState({tempData});
     }
     updateSubmitCancel(e) {
-        // Trigger resetNumber Validation
-        let tempResetNumber = parseInt(this.state.data.resetNumber);
-        if (Number.isInteger(tempResetNumber)){
-            // Validation pass, then send to reset API
-            axios.post(`${ROOT_URL}/api/cancel`, {})
+
+        if (typeof this.state.data.dateTime.getMonth === 'function' && this.state.data.cancelTrainName.length ===6) {
+            // Process Date for year month and day
+            // Process with cancelTrainName
+            let para = {
+                "trainName" : this.state.data.cancelTrainName,
+                "year" : this.state.data.dateTime.getYear(),
+                "month" : this.state.data.dateTime.getMonth(),
+                "day" : this.state.data.dateTime.getDay()
+            };
+
+            axios.post(`${ROOT_URL}/api/cancel`, para)
                 .then(this.processCancelResult)
-                .catch(function (error) {
-                    console.log(error);
-                    msg = "fail!";
-                });
-            this.updateModal("Cancel Result", msg);
-            this.showModal();
+                .catch(this.processCancelResultError);
         }
         else {
-            console.log("Reset Number input is not an Integer: " + this.state.data.resetNumber);
+            this.updateModal("Cancel Train Result", "Failed To Cancel", ["Invalid Date or Train Name"]);
+            this.showModal();
         }
+    }
+    processCancelResult(response){
+        let subTitle = "";
+        let msg = [];
+
+        if (response.data.result === true) {
+            subTitle = "Canceled User List\n";
+            response.data.canceledUsers.forEach( function(user) {
+                msg.push(<div>UserName: {user.userName} Eamil: {user.email}</div>);
+            });
+        }
+        else {
+            subTitle = "Failed To Cancel";
+            msg.push(response.data.reason);
+        }
+
+        this.updateModal("Cancel Train", subTitle, msg);
+        this.showModal();
+    }
+    processCancelResultError(error){
+        this.updateModal("Cancel Train", "Failed To Cancel: ERROR", [error.message]);
+        this.showModal();
     }
     updateSubmitReset(e) {
         // Trigger resetNumber Validation
@@ -111,54 +136,60 @@ class Admin extends React.Component {
             // Validation pass, then send to reset API
             let msg = "";
             axios.get(`${ROOT_URL}/api/reset/` + tempResetNumber)
-                .then(function (response) {
-                    console.log(response);
-                    msg = "success!";
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    msg = "fail!";
-                });
+                .then(this.processResetResult)
+                .catch(this.processResetError);
         }
         else {
-            console.log("Reset Number input is not an Integer: " + this.state.data.resetNumber);
+            this.updateModal("Reset Ticket", "Failed to Reset", ["Reset Number input is not a proper Integer: " + this.state.data.resetNumber]);
+            this.showModal();
         }
+    }
+    processResetResult(response){
+        let subTitle = "";
+        let msg = [];
+
+        if (response.data.result === true) {
+            subTitle = "Reset Result\n";
+            msg.push("Success!");
+        }
+        else {
+            subTitle = "Failed to Reset";
+            msg.push(response.data.reason);
+        }
+
+        this.updateModal("Reset Ticket", subTitle, msg);
+        this.showModal();
+    }
+    processResetError(error){
+        this.updateModal("Reset Ticket", "Failed To Reset: ERROR", [error.message]);
+        this.showModal();
     }
     updateSubmitSystemReport(e) {
         // Trigger resetNumber Validation
-        let tempSRTrainName = this.state.data.srTrainName;
-        if (tempSRTrainName.startsWith("NB") || tempSRTrainName.startsWith("SB")){
+        let tempsystemReportTrainName = this.state.data.systemReportTrainName;
+        if (tempsystemReportTrainName.length ===6
+            && (tempsystemReportTrainName.startsWith("NB") || tempsystemReportTrainName.startsWith("SB"))
+            && (/^\d+$/.test(tempsystemReportTrainName.slice(-4)))
+            && (tempsystemReportTrainName.charAt(2) + tempsystemReportTrainName.charAt(3) >=6)
+            && (tempsystemReportTrainName.charAt(2) + tempsystemReportTrainName.charAt(3) <=21)
+        ){
             // Validation pass, then send to API
             let msg = "";
-            axios.get(`${ROOT_URL}/api/report/train/` + tempSRTrainName)
+            axios.get(`${ROOT_URL}/api/report/train/` + tempsystemReportTrainName)
                 .then(this.processReportData)
-                .catch(function (error) {
-                    console.log(error);
-                    msg = "fail!";
-                });
+                .catch(this.processSystemReportError);
         }
-        else if (tempSRTrainName.toLowerCase() === "all"){
+        else if (tempsystemReportTrainName.length ===3 &&tempsystemReportTrainName.toLowerCase() === "all"){
             // Report all
             let msg = "";
             axios.get(`${ROOT_URL}/api/report/system`)
                 .then(this.processAllData)
-                .catch(function (error) {
-                    console.log(error);
-                    msg = "fail!";
-                });
+                .catch(this.processSystemReportError);
         }
         else {
-            console.log("Reset Number input is not an Integer: " + this.state.data.resetNumber);
+            this.updateModal("System Report", "Failed generate Report", ["Invalid Train Name: " + this.state.data.systemReportTrainName]);
+            this.showModal();
         }
-    }
-    processCancelResult(response){
-        console.log(response);
-
-        this.updateModal("Reset Result");
-        this.showModal();
-    }
-    processCancelResultError(error){
-        console.log(error);
     }
     processReportData(response){
         let tempData = this.state.data;
@@ -172,10 +203,14 @@ class Admin extends React.Component {
         tempData.srData = [];
         this.setState({tempData});
     }
-
-    updateModal(title, message){
+    processSystemReportError(error){
+        this.updateModal("System Report", "Failed generate Report: ERROR", [error.message]);
+        this.showModal();
+    }
+    updateModal(title, subTitle, message){
         let tempData = this.state.data;
         tempData.modalTitle = title;
+        tempData.modalSubTitle = subTitle;
         tempData.modalMessage = message;
         this.setState({tempData});
     }
@@ -213,6 +248,7 @@ class Admin extends React.Component {
             >
                 <div id="modelDialog" className="modalDialog" >
                     <h4 id='modal-label'>{this.state.data.modalTitle}</h4>
+                    <h5 id='modal-label'>{this.state.data.modalSubTitle}</h5>
                     <p>{this.state.data.modalMessage}</p>
                 </div>
             </Modal>
@@ -224,7 +260,7 @@ class Admin extends React.Component {
                             updateDateTimeProp={this.updateDateTime}
                             updateRadioProp={this.updateRadio}
                             updateSubmitCancelProp={this.updateSubmitCancel}
-                            trainNameProp={this.state.data.trainName}
+                            cancelTrainNameProp={this.state.data.cancelTrainName}
                             dateTimeProp={this.state.data.dateTime}
                         />
                     </div>
@@ -242,7 +278,7 @@ class Admin extends React.Component {
                             <SystemReport
                                 updateStateProp={this.updateState}
                                 updateSubmitSystemReportProp={this.updateSubmitSystemReport}
-                                srTrainNameProp={this.state.data.srTrainName}
+                                systemReportcancelTrainNameProp={this.state.data.systemReportTrainName}
                                 srDataProp={this.state.data.srData}
                                 srAllDataProp={this.state.data.srAllData}
                             />
@@ -275,7 +311,7 @@ class CancelTrain extends React.Component {
                     Train Name:&nbsp;
                     <input type = "text"
                         name = "trainName"
-                        value = {this.props.trainNameProp }
+                        value = {this.props.cancelTrainNameProp }
                         disabled
                     />
                 </div>
@@ -310,7 +346,7 @@ class SystemReport extends React.Component {
         let title = "";
         if (this.props.srAllDataProp.length >0){
             rows = [];
-            title = "Report for all Trains"
+            title = "Report for all Trains";
             this.props.srAllDataProp.forEach(function(train){
                 rows.push(
                     <tr>
@@ -322,7 +358,7 @@ class SystemReport extends React.Component {
         }
         if (this.props.srDataProp.length >0){
             rows = [];
-            title = "Report of " +this.props.srTrainNameProp;
+            title = "Report of " +this.props.systemReportcancelTrainNameProp;
             this.props.srDataProp.forEach(function(train){
                 rows.push(
                     <tr>
@@ -365,8 +401,8 @@ class SystemReport extends React.Component {
                 <div className="admin-content-task">
                     Please enter the proper train name. Type "all" for all trains
                     <input type = "text"
-                           name = "srTrainName"
-                           value = {this.props.srTrainNameProp }
+                           name = "systemReportTrainName"
+                           value = {this.props.systemReportcancelTrainNameProp }
                            onChange = {this.props.updateStateProp}
                     />
                 </div>
