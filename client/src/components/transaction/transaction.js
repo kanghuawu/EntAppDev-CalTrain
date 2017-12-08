@@ -27,6 +27,7 @@ class Transaction extends React.Component {
         this.processTransactionData = this.processTransactionData.bind(this);
         this.postCancelTransaction = this.postCancelTransaction.bind(this);
         this.processCancelTransactoin = this.processCancelTransactoin.bind(this);
+        this.processCancelTransactoinError = this.processCancelTransactoinError.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.updateModal = this.updateModal.bind(this);
@@ -76,12 +77,17 @@ class Transaction extends React.Component {
     processCancelTransactoin(response){
         console.log(response);
         if (response.data.result){
-
-        }
-        else {
-            this.updateModal("Get Transaction", "Failed to Catch Transaction");
+            this.updateModal("Cancel Transaction", "Success!");
             this.showModal();
         }
+        else {
+            this.updateModal("Cancel Transaction Failed", response.data.reason);
+            this.showModal();
+        }
+    }
+    processCancelTransactoinError(error){
+        this.updateModal("Cancel Transaction Failed: ERROR", [error.message]);
+        this.showModal();
     }
 
     updateModal(title, message){

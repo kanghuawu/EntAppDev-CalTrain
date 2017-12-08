@@ -50,7 +50,6 @@ export const signInGoogle = ({ userName, password, email }, callback) => {
             .then(response => {
                 localStorage.setItem('userName', userName);
                 localStorage.setItem('password', password);
-                localStorage.setItem('email', email);
                 if (response.data.result) {
                     dispatch({ type: AUTH_USER });
                     if (callback) callback();

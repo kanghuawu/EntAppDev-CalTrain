@@ -7,9 +7,6 @@ import RenderAlert from './authAlert';
 import { signInUser, signInGoogle, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
-import axios from "axios/index";
-
-const ROOT_URL = "http://localhost:7000";
 
 class SignIn extends Component {
     constructor(props) {
