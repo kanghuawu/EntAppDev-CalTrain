@@ -7,6 +7,9 @@ import RenderAlert from './authAlert';
 import { signInUser, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
+import axios from "axios/index";
+
+const ROOT_URL = "http://localhost:7000";
 
 class SignIn extends Component {
     constructor(props) {
@@ -28,9 +31,21 @@ class SignIn extends Component {
     console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     //anything else you want to do(save to localStorage)...
-      this.props.signInUser({ userName: profile.getName(), password: profile.getId()}, () =>
-          this.props.history.push('/transaction')
-      );
+      axios
+          .post(`${ROOT_URL}/api/user/google`, { userName: profile.getName, password: profile.getId(), email: profile.getEmail() })
+          .then(response => {
+              localStorage.setItem('userName', userName);
+              localStorage.setItem('password', password);
+              if (response.data.result) {
+                  dispatch({ type: AUTH_USER });
+                  if (callback) callback();
+              } else {
+                  dispatch(authError(response.data.reason));
+              }
+          })
+          .catch(error => {
+              console.log(error);
+          });
   }
 
   render() {

@@ -79,7 +79,8 @@ class Transaction extends React.Component {
 
         }
         else {
-
+            this.updateModal("Get Transaction", "Failed to Catch Transaction");
+            this.showModal();
         }
     }
 
