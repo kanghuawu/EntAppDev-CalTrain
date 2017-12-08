@@ -24,6 +24,7 @@ export const renderDateTimePicker = ({
   <DateTimePicker
     onChange={onChange}
     format="DD MMM YYYY, hh:mm"
+    step={15}
     time={showTime}
     value={!value ? null : new Date(value)}
   />
