@@ -45,6 +45,7 @@ class Admin extends React.Component {
         this.updateSubmitReset = this.updateSubmitReset.bind(this);
         this.updateSubmitCancel = this.updateSubmitCancel.bind(this);
         this.updateSubmitSystemReport = this.updateSubmitSystemReport.bind(this);
+        this.processCancelResult = this.processCancelResult.bind(this);
         this.processReportData = this.processReportData.bind(this);
         this.processAllData = this.processAllData.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -90,12 +91,8 @@ class Admin extends React.Component {
         let tempResetNumber = parseInt(this.state.data.resetNumber);
         if (Number.isInteger(tempResetNumber)){
             // Validation pass, then send to reset API
-            let msg = "";
-            axios.get(`${ROOT_URL}/api/reset/` + tempResetNumber)
-                .then(function (response) {
-                    console.log(response);
-                    msg = "success!";
-                })
+            axios.post(`${ROOT_URL}/api/cancel`, {})
+                .then(this.processCancelResult)
                 .catch(function (error) {
                     console.log(error);
                     msg = "fail!";
@@ -122,8 +119,6 @@ class Admin extends React.Component {
                     console.log(error);
                     msg = "fail!";
                 });
-            this.updateModal("Reset Result", msg);
-            this.showModal();
         }
         else {
             console.log("Reset Number input is not an Integer: " + this.state.data.resetNumber);
@@ -155,6 +150,15 @@ class Admin extends React.Component {
         else {
             console.log("Reset Number input is not an Integer: " + this.state.data.resetNumber);
         }
+    }
+    processCancelResult(response){
+        console.log(response);
+
+        this.updateModal("Reset Result");
+        this.showModal();
+    }
+    processCancelResultError(error){
+        console.log(error);
     }
     processReportData(response){
         let tempData = this.state.data;
