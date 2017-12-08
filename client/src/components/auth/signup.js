@@ -8,11 +8,29 @@ import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
 
 class SignUp extends Component {
+    constructor(props) {
+        super(props);
+        this.responseGoogle = this.responseGoogle.bind(this);
+    }
+
   handleFormSubmit(formProps) {
     this.props.signUpUser(formProps, () =>
       this.props.history.push('/transaction')
     );
   }
+    responseGoogle(googleUser) {
+        let id_token = googleUser.getAuthResponse().id_token;
+        console.log({ accessToken: id_token });
+        let profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        //anything else you want to do(save to localStorage)...
+        this.props.signUpUser({userName: profile.getName(), email: profile.getEmail(), password: profile.getId()}, () =>
+            this.props.history.push('/transaction')
+        );
+    }
 
   render() {
     const { handleSubmit } = this.props;
