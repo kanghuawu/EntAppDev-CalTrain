@@ -12,7 +12,7 @@ import station from './stationList';
 // momentLocalizer(moment);
 
 class SearchTrain extends Component {
-  formatTime(date) {
+  formatGoTime(date) {
     const newTime = {};
     newTime.goYear = date.getFullYear();
     newTime.goMonth = date.getMonth() + 1;
@@ -22,22 +22,32 @@ class SearchTrain extends Component {
     return newTime;
   }
 
+  formatBackTime(date) {
+    const newTime = {};
+    newTime.backYear = date.getFullYear();
+    newTime.backMonth = date.getMonth() + 1;
+    newTime.backDay = date.getDate();
+    newTime.backHour = date.getHours();
+    newTime.backMinute = date.getMinutes();
+    return newTime;
+  }
+
   onSubmit(searchTrain, formProps) {
-    console.log(formProps);
-    if (formProps.goTime) {
-      const newGoTime = this.formatTime(formProps.goTime);
+    // console.log(formProps);
+    if (searchTrain)  {
+      if (formProps.goTime) {
+      const newGoTime = this.formatGoTime(formProps.goTime);
       delete formProps.goTime;
       Object.assign(formProps, newGoTime);
     }
 
     if (formProps.backTime) {
-      const newBackTime = this.formatTime(formProps.backTime);
+      const newBackTime = this.formatBackTime(formProps.backTime);
       delete formProps.backTime;
       Object.assign(formProps, newBackTime);
     }
-
-    if (searchTrain) {
       this.props.searchTrainList(formProps);
+    
     }
   }
 
@@ -89,6 +99,7 @@ class SearchTrain extends Component {
               <Field
                 name="goTime"
                 showTime={true}
+                id="goTime"
                 component={renderDateTimePicker}
               />
             </div>
@@ -126,6 +137,7 @@ class SearchTrain extends Component {
                   <label>Back Time</label>
                   <Field
                     name="backTime"
+                    id="backTime"
                     showTime={true}
                     component={renderDateTimePicker}
                   />

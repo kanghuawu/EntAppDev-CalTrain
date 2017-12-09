@@ -85,6 +85,7 @@ class AddTrain extends Component {
         res.round = true;
         res.backSegments = back.segments;
       }
+      console.log(res);
       res.passengers = formProps.passengers;
       const userName = localStorage.getItem('userName');
       const password = localStorage.getItem('password');
