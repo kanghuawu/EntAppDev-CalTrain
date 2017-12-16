@@ -1,15 +1,24 @@
-html, body {
+html,
+body {
     height: 100%;
     width: 100%;
 }
 
 body {
     background: #c6fcff; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#c6fcff, #dbdbdb); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#c6fcff, #dbdbdb); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#c6fcff, #dbdbdb); /* For Firefox 3.6 to 15 */
+    background: -webkit-linear-gradient(
+        #c6fcff,
+        #dbdbdb
+    ); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(
+        #c6fcff,
+        #dbdbdb
+    ); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(
+        #c6fcff,
+        #dbdbdb
+    ); /* For Firefox 3.6 to 15 */
     background: linear-gradient(#c6fcff, #dbdbdb); /* Standard syntax */
-
 }
 
 #navbar {
@@ -17,7 +26,7 @@ body {
     width: 100%;
     font-size: 17px;
     background: linear-gradient(to right, #047c8b, #047c8b, #047c8b, #c6fcff);
-    color: rgba(255,255,255,1);
+    color: rgba(255, 255, 255, 1);
     border-bottom: 0px;
     border-right: 0px;
 }
@@ -35,12 +44,14 @@ body {
     margin-left: 20px;
 }
 
-#navbar .navbar-brand, #navbar .nav-item a {
+#navbar .navbar-brand,
+#navbar .nav-item a {
     vertical-align: top;
-    color: rgba(255,255,255,1);
+    color: rgba(255, 255, 255, 1);
 }
 
-.google-login, .login-btn{
+.google-login,
+.login-btn {
     height: 46px;
     padding: 12px 18px;
     margin-right: 20px;
@@ -64,11 +75,12 @@ body {
 }
 
 .group-item {
-    float:left;
+    float: left;
     margin-right: 30px;
 }
 
-.expired-btn, .expired-btn:hover {
+.expired-btn,
+.expired-btn:hover {
     color: darkgrey;
 }
 
@@ -77,7 +89,9 @@ body {
     color: white;
 }
 
-.transaction-table, .transaction-table-user, .transaction-table-title {
+.transaction-table,
+.transaction-table-user,
+.transaction-table-title {
     background-color: #eaffff;
     color: #012fc7;
     border: 1.2px solid #fff;
@@ -131,7 +145,7 @@ body {
     font-size: 15px;
 }
 
-.admin-content-no-content{
+.admin-content-no-content {
     margin-top: 25px;
     margin-bottom: 15px;
     color: #012fc7;
@@ -176,8 +190,13 @@ caption {
     transform: translate(-50%, -50%);
     border: 1px solid #e5e5e5;
     background-color: white;
-    box-Shadow: 0 5px 15px rgba(0,0,0,.5);
+    box-Shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     padding: 20px;
+}
+
+.modalSearchDialog {
+    position: relative;
+    top: 180px;
 }
 
 .error {

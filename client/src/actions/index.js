@@ -18,6 +18,9 @@ export const RESET_SELECTION = 'reset_selection';
 export const SHOW_MODAL = 'show_modal';
 export const HIDE_MODAL = 'hide_modal';
 
+export const SHOW_ERROR_MODAL = 'show_error_modal';
+export const HIDE_ERROR_MODAL = 'hide_error_modal';
+
 export const CREATE_TRANSACTION = 'create_transaction';
 export const TXN_ERROR = 'txn_error';
 
@@ -43,24 +46,24 @@ export const signInUser = ({ userName, password }, callback) => {
 };
 
 export const signInGoogle = ({ userName, password, email }, callback) => {
-    console.log('google_google');
-    return dispatch => {
-        axios
-            .post(`${ROOT_URL}/api/user/google`, { userName, password, email })
-            .then(response => {
-                localStorage.setItem('userName', userName);
-                localStorage.setItem('password', password);
-                if (response.data.result) {
-                    dispatch({ type: AUTH_USER });
-                    if (callback) callback();
-                } else {
-                    dispatch(authError(response.data.reason));
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    };
+  console.log('google_google');
+  return dispatch => {
+    axios
+      .post(`${ROOT_URL}/api/user/google`, { userName, password, email })
+      .then(response => {
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('password', password);
+        if (response.data.result) {
+          dispatch({ type: AUTH_USER });
+          if (callback) callback();
+        } else {
+          dispatch(authError(response.data.reason));
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 };
 
 export const signUpUser = ({ userName, email, password }, callback) => {
@@ -154,12 +157,21 @@ export const hideModal = () => {
   return dispatch => dispatch({ type: HIDE_MODAL });
 };
 
+export const showErrorModal = msg => {
+  return dispatch => dispatch({ type: SHOW_ERROR_MODAL, payload: msg });
+};
+
+export const hideErrorModal = () => {
+  return dispatch => dispatch({ type: HIDE_ERROR_MODAL });
+};
+
 export const createTransaction = (data, callback) => {
   return dispatch => {
     axios.post(`${ROOT_URL}/api/transaction/create`, data).then(response => {
       // console.log(response);
       if (response.data.result) {
         callback();
+        dispatch({ type: CLEAR_SEARCH });
       } else {
         dispatch(txnError(response.data.reason));
       }
@@ -173,3 +185,7 @@ export const txnError = error => {
     payload: error
   };
 };
+
+// export const clearForm = (formName) => {
+//   return dispatch => dispatch(reset)
+// }

@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
-import { reduxForm, change, Field } from 'redux-form';
+import { reduxForm, change, Field, reset } from 'redux-form';
 
 import { renderDropdownList, renderSelectList } from '../util/reactWidgets';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import RenderAlert from './renderAlert';
-import LoginModal from './modal';
 import {
   searchTrainList,
   createTransaction,
   clearSearch,
-  showModal
+  showModal,
+  showErrorModal
 } from '../../actions';
 
 class AddTrain extends Component {
@@ -34,88 +34,92 @@ class AddTrain extends Component {
     return data;
   }
 
-  onSubmit(formProps) {
-    if (!this.props.auth) {
-      this.props.showModal();
-    } else {
-      if (!formProps.passengers) {
-        alert('Passenger is empty!');
-        return;
-      }
-      const go = JSON.parse(
-        JSON.stringify(
-          this.props.search.goTripInfoAggregation.normalTrainTrips[
-            formProps.go
-          ] ||
-            this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]
-        ) || null
-      );
-
-      let back = {};
-      if (formProps.back) {
-        back = JSON.parse(
-        JSON.stringify(
-            this.props.search.backTripInfoAggregation.normalTrainTrips[
-              formProps.back
-            ] ||
-              this.props.search.backTripInfoAggregation.fastTrainTrips[
-                formProps.back
-              ] ||
-              null
-          )
-        );
-      }
-      
-      const res = {};
-      if (formProps.go) {
-        go.segments.forEach((o, i, a) => {
-          o = this.formatResponse(o);
-        });
-        res.goSegments = go.segments;
-        res.round = false;
-      } else {
-        alert('Go trip is empty!');
-        return;
-      }
-
-      if (formProps.back) {
-        back.segments.forEach((o, i, a) => {
-          o = this.formatResponse(o);
-        });
-        res.round = true;
-        res.backSegments = back.segments;
-      }
-      console.log(res);
-      res.passengers = formProps.passengers;
-      const userName = localStorage.getItem('userName');
-      const password = localStorage.getItem('password');
-      res.userName = userName;
-      res.password = password;
-      this.props.createTransaction(res, () =>
-        this.props.history.push('/transaction')
-      );
+  validation(form) {
+    const error = {};
+    if (!form.passengers) {
+      error.passengers = 'Not yet select passenger number';
     }
+    if (!form.go) {
+      error.go = 'Not yet select go trip';
+    }
+    return error;
   }
 
-  // onChange(id) {
-  //   this.props.selectTrain(id);
-  // }
+  onSubmit(formProps) {
+    const error = this.validation(formProps);
+    if (!this.props.auth) {
+      this.props.showModal();
+      return;
+    }
+
+    if (!_.isEmpty(error)) {
+      this.props.showErrorModal(error);
+      return;
+    }
+
+    const go = JSON.parse(
+      JSON.stringify(
+        this.props.search.goTripInfoAggregation.normalTrainTrips[
+          formProps.go
+        ] ||
+          this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]
+      ) || null
+    );
+
+    let back = {};
+    if (formProps.back) {
+      back = JSON.parse(
+        JSON.stringify(
+          this.props.search.backTripInfoAggregation.normalTrainTrips[
+            formProps.back
+          ] ||
+            this.props.search.backTripInfoAggregation.fastTrainTrips[
+              formProps.back
+            ] ||
+            null
+        )
+      );
+    }
+
+    const res = {};
+    go.segments.forEach((o, i, a) => {
+      o = this.formatResponse(o);
+    });
+    res.goSegments = go.segments;
+    res.round = false;
+    if (formProps.back) {
+      back.segments.forEach((o, i, a) => {
+        o = this.formatResponse(o);
+      });
+      res.round = true;
+      res.backSegments = back.segments;
+    }
+
+    res.passengers = formProps.passengers;
+    const userName = localStorage.getItem('userName');
+    const password = localStorage.getItem('password');
+    res.userName = userName;
+    res.password = password;
+    this.props.createTransaction(res, () => {
+      this.props.history.push('/transaction');
+      this.props.reset();
+    });
+  }
 
   renderSegment(segment, direction) {
     return segment.map(seg => {
+      const key =
+        seg.trainName +
+        seg.fast +
+        seg.startDay +
+        seg.startTime +
+        seg.endDay +
+        seg.endTime +
+        direction;
       return (
-        <tr
-          key={
-            seg.trainName +
-            seg.fast +
-            seg.startDay +
-            seg.startTime +
-            seg.endDay +
-            seg.endTime
-          }
-        >
+        <tr key={key}>
           <th>{seg.trainName}</th>
-          <th>{seg.fast? "Yes": "No"}</th>
+          <th>{seg.fast ? 'Yes' : 'No'}</th>
           <th>{seg.startDay}</th>
           <th>{seg.startTime}</th>
           <th>{seg.endDay}</th>
@@ -158,7 +162,7 @@ class AddTrain extends Component {
                     <th>Tickets Left</th>
                   </tr>
                 </thead>
-                <tbody>{this.renderSegment(trip.segments)}</tbody>
+                <tbody>{this.renderSegment(trip.segments, direction)}</tbody>
               </table>
             </div>
           </div>
@@ -167,19 +171,25 @@ class AddTrain extends Component {
     });
   }
 
+  clearForm(event) {
+    event.preventDefault();
+    this.props.reset('addtrainlist');
+  }
+
   render() {
     if (this.props.search == null) {
       return <div>Loading...</div>;
     }
     const {
+      round,
       goTripInfoAggregation,
       backTripInfoAggregation
     } = this.props.search;
     const { handleSubmit } = this.props;
     const passengers = [1, 2, 3, 4, 5];
+
     return (
       <div>
-        <LoginModal />
         <form>
           {goTripInfoAggregation &&
           goTripInfoAggregation.normal && (
@@ -199,7 +209,8 @@ class AddTrain extends Component {
               </ul>
             </div>
           )}
-          {backTripInfoAggregation &&
+          {round &&
+          backTripInfoAggregation &&
           backTripInfoAggregation.normal && (
             <div>
               <h4>Normal Back Train</h4>
@@ -211,7 +222,8 @@ class AddTrain extends Component {
               </ul>
             </div>
           )}
-          {backTripInfoAggregation &&
+          {round &&
+          backTripInfoAggregation &&
           backTripInfoAggregation.fast && (
             <div>
               <h4>Fast Back Train</h4>
@@ -220,33 +232,36 @@ class AddTrain extends Component {
               </ul>
             </div>
           )}
-          <div>
-            <div style={{ maxWidth: '200px' }}>
-              <label>Number of Passenger</label>{' '}
-              <Field
-                data={passengers}
-                name="passengers"
-                id="passengers"
-                component={renderDropdownList}
-              />
-              {this.props.form.addtrainlist}
+
+          {!_.isEmpty(this.props.search) && (
+            <div>
+              <div>
+                <div style={{ maxWidth: '200px' }}>
+                  <label>Number of Passenger</label>{' '}
+                  <Field
+                    data={passengers}
+                    name="passengers"
+                    id="passengers"
+                    component={renderDropdownList}
+                  />
+                  {this.props.form.addtrainlist}
+                </div>
+              </div>
+              <RenderAlert />
+              <button
+                className="btn btn-primary"
+                onClick={handleSubmit(this.onSubmit.bind(this))}
+              >
+                Purchase
+              </button>{' '}
+              <button
+                className="btn btn-secondary"
+                onClick={this.clearForm.bind(this)}
+              >
+                Reset
+              </button>
             </div>
-          </div>
-          <RenderAlert />
-          <div>
-            <button
-              className="btn btn-primary"
-              onClick={handleSubmit(this.onSubmit.bind(this))}
-            >
-              Purchase
-            </button>{' '}
-            <button
-              className="btn btn-secondary"
-              onClick={() => this.props.reset}
-            >
-              Reset
-            </button>
-          </div>
+          )}
         </form>
       </div>
     );
@@ -256,8 +271,7 @@ class AddTrain extends Component {
 const mapStatesToProps = state => {
   return {
     auth: state.auth.authenticated,
-    search: state.search,
-    select: state.select
+    search: state.search
   };
 };
 
@@ -265,7 +279,8 @@ export default connect(mapStatesToProps, {
   searchTrainList,
   createTransaction,
   clearSearch,
-  showModal
+  showModal,
+  showErrorModal
 })(
   reduxForm({
     form: 'addtrainlist'

@@ -1,27 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, change, Field } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
 import renderField from '../util/formHelper';
-import { hideModal, signInUser } from '../../actions';
+import { showModal, hideModal, signInUser } from '../../actions';
 import SignInUser from '../auth/signin';
+import RenderAlert from '../auth/authAlert';
 
 class LoginModal extends Component {
-  constructor(props) {
-    super(props);
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-  }
   handleFormSubmit({ userName, password }) {
     this.props.signInUser({ userName, password }, () => this.props.hideModal());
   }
+
+  hideModal(e) {
+    e.preventDefault();
+    this.props.hideModal();
+  }
+
+  toggle() {
+    console.log('toggle');
+    if (this.props.modal) {
+      this.props.hideModal();
+    } else {
+      this.props.showModal();
+    }
+  }
+
   render() {
     const { handleSubmit } = this.props;
+    console.log(this.props.modal);
     return (
       <div>
-        <Modal isOpen={this.props.modal}>
+        <Modal
+          isOpen={this.props.modal}
+          toggle={() => this.props.showModal()}
+          className="modalSearchDialog"
+        >
           <ModalHeader>Please Sign In</ModalHeader>
           <ModalBody>
-            <form>
+            <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
               <Field
                 label="User Name"
                 name="userName"
@@ -36,22 +54,22 @@ class LoginModal extends Component {
                 component={renderField}
                 type="password"
               />
+              <RenderAlert />
               <button
                 type="submit"
                 className="btn btn-primary"
-                onClick={handleSubmit(this.handleFormSubmit)}
+                onClick={this.handleFormSubmit}
               >
                 Sign In
               </button>{' '}
               <button
                 className="btn btn-secondary"
-                onClick={this.props.hideModal}
+                onClick={this.hideModal.bind(this)}
               >
                 Cancel
               </button>
             </form>
           </ModalBody>
-          <ModalFooter />
         </Modal>
       </div>
     );
@@ -59,14 +77,25 @@ class LoginModal extends Component {
 }
 
 function mapStateToProps(state) {
-  // console.log(state.modal);
   return {
     modal: state.modal.display
   };
 }
 
-export default connect(mapStateToProps, { hideModal, signInUser })(
+const validate = value => {
+  const errors = {};
+  if (!value.userName) {
+    errors.userName = 'Required';
+  }
+  if (!value.password) {
+    errors.password = 'Required';
+  }
+  return errors;
+};
+
+export default connect(mapStateToProps, { showModal, hideModal, signInUser })(
   reduxForm({
-    form: 'loginmodal'
+    form: 'loginmodal',
+    validate
   })(LoginModal)
 );

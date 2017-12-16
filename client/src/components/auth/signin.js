@@ -9,10 +9,10 @@ import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
 
 class SignIn extends Component {
-    constructor(props) {
-        super(props);
-        this.responseGoogle = this.responseGoogle.bind(this);
-    }
+  constructor(props) {
+    super(props);
+    this.responseGoogle = this.responseGoogle.bind(this);
+  }
   handleFormSubmit({ userName, password }) {
     this.props.signInUser({ userName, password }, () =>
       this.props.history.push('/transaction')
@@ -28,9 +28,14 @@ class SignIn extends Component {
     // console.log('Image URL: ' + profile.getImageUrl());
     // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     //anything else you want to do(save to localStorage)...
-      this.props.signInGoogle({ userName: profile.getName(), password: profile.getId(), email: profile.getEmail() }, () =>
-          this.props.history.push('/transaction')
-      );
+    this.props.signInGoogle(
+      {
+        userName: profile.getName(),
+        password: profile.getId(),
+        email: profile.getEmail()
+      },
+      () => this.props.history.push('/transaction')
+    );
   }
 
   render() {
@@ -80,8 +85,8 @@ class SignIn extends Component {
 
 const validate = value => {
   const errors = {};
-  if (!value.email) {
-    errors.email = 'Required';
+  if (!value.userName) {
+    errors.userName = 'Required';
   }
   if (!value.password) {
     errors.password = 'Required';

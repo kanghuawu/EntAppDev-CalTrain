@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { reduxForm, Field, formValueSelector } from "redux-form";
-import moment from "moment";
-import momentLocalizer from "react-widgets-moment";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { reduxForm, Field, formValueSelector, reset } from 'redux-form';
+import moment from 'moment';
+import momentLocalizer from 'react-widgets-moment';
+import _ from 'lodash';
 
-import { renderDropdownList, renderDateTimePicker } from "../util/reactWidgets";
-import { searchTrainList, clearSearch } from "../../actions";
-import station from "./stationList";
+import { renderDropdownList, renderDateTimePicker } from '../util/reactWidgets';
+import { searchTrainList, clearSearch, showErrorModal } from '../../actions';
+import station from './stationList';
 
 // moment.locale('en');
 // momentLocalizer(moment);
@@ -32,42 +33,83 @@ class SearchTrain extends Component {
     return newTime;
   }
 
+  validation(form) {
+    const error = {};
+    if (!form.normal && !form.fast) {
+      error.normal = 'Select at least normal or fast';
+    }
+    if (!form.connection) {
+      error.connection = 'Connection is missing';
+    }
+    if (!form.goStartStation) {
+      error.goStartStation = 'Go start station is missing';
+    }
+    if (!form.goEndStation) {
+      error.goEndStation = 'Go End station is missing';
+    }
+    if (!form.goTime) {
+      error.goTime = 'Go time missing';
+    }
+    if (form.round) {
+      if (!form.backStartStation) {
+        error.backStartStation = 'Back start station is missing';
+      }
+      if (!form.backEndStation) {
+        error.backEndStation = 'Back end station is missing';
+      }
+      if (!form.backTime) {
+        error.backTime = 'Back time missing';
+      }
+    }
+    return error;
+  }
+
   onSubmit(searchTrain, formProps) {
-    // console.log(formProps);
+    const error = this.validation(formProps);
+    if (!_.isEmpty(error)) {
+      this.props.showErrorModal(error);
+      // return;
+    }
     if (searchTrain) {
-      const res = {};
+      let res = {};
       if (formProps.goTime) {
         const newGoTime = this.formatGoTime(formProps.goTime);
-        Object.assign(res, newGoTime);
+        res = { ...res, ...newGoTime };
+        res.round = false;
+        res.goStartStation = formProps.goStartStation;
+        res.goEndStation = formProps.goEndStation;
       }
 
-      if (formProps.backTime) {
+      if (formProps.round) {
         const newBackTime = this.formatBackTime(formProps.backTime);
-        Object.assign(res, newBackTime);
+        res = { ...res, ...newBackTime };
+        res.round = true;
+        res.backStartStation = formProps.backStartStation;
+        res.backEndStation = formProps.backEndStation;
       }
-      console.log(res);
       this.props.searchTrainList(res);
     }
   }
-
-  onReset() {
-    this.props.reset();
+  clearForm(event) {
+    event.preventDefault();
+    this.props.reset('searchtrain');
   }
 
   render() {
     const { isRound, handleSubmit } = this.props;
     const searchTrain = true;
     const connection = [1, 2, 3];
+
     return (
-      <div style={{ maxWidth: "500px" }}>
-        <form>
+      <div style={{ maxWidth: '500px' }}>
+        <form onSubmit={handleSubmit(this.onSubmit.bind(this, searchTrain))}>
           <div>
             <div>
-              <label>Fast Train</label>{" "}
+              <label>Fast Train</label>{' '}
               <Field name="fast" id="fast" component="input" type="checkbox" />
             </div>
             <div>
-              <label>Normal Train</label>{" "}
+              <label>Normal Train</label>{' '}
               <Field
                 name="normal"
                 id="normal"
@@ -76,7 +118,7 @@ class SearchTrain extends Component {
               />
             </div>
             <div>
-              <label>Connection</label>{" "}
+              <label>Connection</label>{' '}
               <Field
                 data={connection}
                 name="connection"
@@ -85,7 +127,7 @@ class SearchTrain extends Component {
               />
             </div>
             <div>
-              <label>Exactly</label>{" "}
+              <label>Exactly</label>{' '}
               <Field
                 name="exactly"
                 id="exactly"
@@ -103,7 +145,7 @@ class SearchTrain extends Component {
               />
             </div>
             <div>
-              <label>Go Start Station</label>{" "}
+              <label>Go Start Station</label>{' '}
               <Field
                 data={station}
                 name="goStartStation"
@@ -112,7 +154,7 @@ class SearchTrain extends Component {
               />
             </div>
             <div>
-              <label>Go End Station</label>{" "}
+              <label>Go End Station</label>{' '}
               <Field
                 data={station}
                 name="goEndStation"
@@ -121,7 +163,7 @@ class SearchTrain extends Component {
               />
             </div>
             <div>
-              <label>Round Trip</label>{" "}
+              <label>Round Trip</label>{' '}
               <Field
                 name="round"
                 id="round"
@@ -142,7 +184,7 @@ class SearchTrain extends Component {
                   />
                 </div>
                 <div>
-                  <label>Back Start Station</label>{" "}
+                  <label>Back Start Station</label>{' '}
                   <Field
                     data={station}
                     name="backStartStation"
@@ -151,7 +193,7 @@ class SearchTrain extends Component {
                   />
                 </div>
                 <div>
-                  <label>Back End Station</label>{" "}
+                  <label>Back End Station</label>{' '}
                   <Field
                     data={station}
                     name="backEndStation"
@@ -163,13 +205,13 @@ class SearchTrain extends Component {
             )}
           </div>
           <div>
-            <button
-              className="btn btn-primary"
-              onClick={handleSubmit(this.onSubmit.bind(this, searchTrain))}
-            >
+            <button className="btn btn-primary" type="submit">
               Search
-            </button>{" "}
-            <button className="btn btn-secondary" onClick={this.props.reset}>
+            </button>{' '}
+            <button
+              className="btn btn-secondary"
+              onClick={this.clearForm.bind(this)}
+            >
               Reset
             </button>
           </div>
@@ -178,15 +220,15 @@ class SearchTrain extends Component {
     );
   }
 }
-const selector = formValueSelector("searchtrain");
+const selector = formValueSelector('searchtrain');
 
 export default connect(
   state => ({
-    isRound: selector(state, "round")
+    isRound: selector(state, 'round')
   }),
-  { searchTrainList, clearSearch }
+  { searchTrainList, clearSearch, showErrorModal }
 )(
   reduxForm({
-    form: "searchtrain"
+    form: 'searchtrain'
   })(SearchTrain)
 );
