@@ -6,6 +6,7 @@ class RenderAlert extends Component {
     if (this.props.errorMessage.length === 0) {
       return <div />;
     }
+    console.log('error');
     return (
       <div className="alert alert-danger">
         <strong>Oops!</strong>

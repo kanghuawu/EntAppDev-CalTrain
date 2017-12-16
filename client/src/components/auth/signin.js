@@ -14,9 +14,14 @@ class SignIn extends Component {
     this.responseGoogle = this.responseGoogle.bind(this);
   }
   handleFormSubmit({ userName, password }) {
-    this.props.signInUser({ userName, password }, () =>
-      this.props.history.push('/transaction')
-    );
+    this.props.signInUser({ userName, password }, () => {
+      console.log(this.props.isInModal);
+      if (!this.props.isInModal) {
+        this.props.history.push('/transaction');
+      } else {
+        this.props.toggle();
+      }
+    });
   }
 
   responseGoogle(googleUser) {

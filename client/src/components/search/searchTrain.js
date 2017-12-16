@@ -68,7 +68,7 @@ class SearchTrain extends Component {
     const error = this.validation(formProps);
     if (!_.isEmpty(error)) {
       this.props.showErrorModal(error);
-      // return;
+      return;
     }
     if (searchTrain) {
       let res = {};
