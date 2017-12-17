@@ -205,11 +205,11 @@ class SearchTrain extends Component {
             )}
           </div>
           <div>
-            <button className="btn btn-primary" type="submit">
+            <button className="search-btn" type="submit">
               Search
             </button>{' '}
             <button
-              className="btn btn-secondary"
+              className="search-btn"
               onClick={this.clearForm.bind(this)}
             >
               Reset
