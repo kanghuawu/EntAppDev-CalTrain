@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://localhost:7000';
+// const ROOT_URL = 'http://localhost:7000';
+const ROOT_URL = '';
 
 export const AUTH_USER = 'auth_user';
 export const UNAUTH_USER = 'unauth_user';
