@@ -69,20 +69,18 @@ class SignUp extends Component {
             type="password"
           />
           <RenderAlert />
-          <button action="submit" className="btn btn-primary">
+          <button action="submit" className="login-btn">
             Sign up
           </button>
+            <GoogleLogin
+                socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
+                className="google-login"
+                scope="profile"
+                fetchBasicProfile={true}
+                responseHandler={this.responseGoogle}
+                buttonText="Sign Up With Google"
+            />
         </form>
-        <div>
-          <GoogleLogin
-            socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
-            className="google-login"
-            scope="profile"
-            fetchBasicProfile={true}
-            responseHandler={this.responseGoogle}
-            buttonText="Sign Up With Google"
-          />
-        </div>
       </div>
     );
   }
