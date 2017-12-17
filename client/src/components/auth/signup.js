@@ -102,7 +102,10 @@ class SignUp extends Component {
     );
   }
 }
-
+function validateEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
 const validate = value => {
   const errors = {};
   if (!value.userName) {
@@ -110,6 +113,9 @@ const validate = value => {
   }
   if (!value.email) {
     errors.email = 'Please enter an email';
+  }
+  if (!validateEmail(value.email)) {
+    errors.email = 'Enter a valid email';
   }
   if (!value.password) {
     errors.password = 'Please enter a password';
