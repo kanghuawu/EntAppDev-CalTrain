@@ -98,8 +98,8 @@ class SearchTrain extends Component {
       } else {
         res.fast = false;
       }
-      console.log(res);
-      // this.props.searchTrainList(res);
+      // console.log(res);
+      this.props.searchTrainList(res);
     }
   }
   clearForm(event) {
