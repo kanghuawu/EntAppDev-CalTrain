@@ -166,7 +166,7 @@ class TransactionResult extends React.Component {
         let userName = '';
         if (this.props.transactionDataProp.length > 0) {
             rows = [];
-            userName = this.props.transactionDataProp[0].userName;
+            userName = localStorage.getItem('userName');
             let goRows = [];
             let goRowsCont = [];
             let backRows = [];
