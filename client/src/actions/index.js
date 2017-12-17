@@ -67,6 +67,27 @@ export const signInGoogle = ({ userName, password, email }, callback) => {
   };
 };
 
+export const signInFacebook = ({ userName, password, email }, callback) => {
+    console.log('facebook_facebook');
+    return dispatch => {
+        axios
+            .post(`${ROOT_URL}/api/user/google`, { userName, password, email })
+            .then(response => {
+                localStorage.setItem('userName', userName);
+                localStorage.setItem('password', password);
+                if (response.data.result) {
+                    dispatch({ type: AUTH_USER });
+                    if (callback) callback();
+                } else {
+                    dispatch(authError(response.data.reason));
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+};
+
 export const signUpUser = ({ userName, email, password }, callback) => {
   return dispatch => {
     axios

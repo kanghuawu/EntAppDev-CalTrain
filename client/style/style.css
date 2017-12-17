@@ -48,6 +48,7 @@ body {
 }
 
 .google-login,
+.facebook-login,
 .login-btn {
     height: 46px;
     padding: 12px 18px;
@@ -93,6 +94,10 @@ body {
 
 .google-login {
     background-color: #ff1e00;
+    color: white;
+}
+.facebook-login {
+    background-color: #355cd6;
     color: white;
 }
 

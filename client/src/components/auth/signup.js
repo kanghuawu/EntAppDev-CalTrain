@@ -6,11 +6,13 @@ import RenderAlert from './authAlert';
 import { signUpUser, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
+import { FacebookLogin } from 'react-facebook-login-component';
 
 class SignUp extends Component {
     constructor(props) {
         super(props);
         this.responseGoogle = this.responseGoogle.bind(this);
+        this.responseFacebook = this.responseFacebook.bind(this);
     }
 
   handleFormSubmit(formProps) {
@@ -28,6 +30,12 @@ class SignUp extends Component {
         console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
         //anything else you want to do(save to localStorage)...
         this.props.signUpUser({userName: profile.getName(), email: profile.getEmail(), password: profile.getId()}, () =>
+            this.props.history.push('/transaction')
+        );
+    }
+    responseFacebook(response){
+        console.log(response);
+        this.props.signUpUser({userName: response.name, email: response.email, password: response.id}, () =>
             this.props.history.push('/transaction')
         );
     }
@@ -73,13 +81,22 @@ class SignUp extends Component {
             Sign up
           </button>
             <GoogleLogin
-                socialId="431809993276-gmbs36n9skqgmgdv73npia3g4h9l2909.apps.googleusercontent.com"
+                socialId="877820270659-q57dfenenfg5rm30rkpp6cvm292m4aia.apps.googleusercontent.com"
                 className="google-login"
                 scope="profile"
                 fetchBasicProfile={true}
                 responseHandler={this.responseGoogle}
-                buttonText="Sign Up With Google"
+                buttonText="Google Sign Up"
             />
+            <FacebookLogin socialId="1751289778514200"
+                           language="en_US"
+                           scope="public_profile,email"
+                           fields="email,name"
+                           responseHandler={this.responseFacebook}
+                           xfbml={true}
+                           version="v2.5"
+                           className="facebook-login"
+                           buttonText="Facebook Sign Up"/>
         </form>
       </div>
     );

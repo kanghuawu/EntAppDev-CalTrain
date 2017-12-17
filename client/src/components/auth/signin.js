@@ -4,14 +4,16 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import RenderAlert from './authAlert';
-import { signInUser, signInGoogle, clearAuthError } from '../../actions';
+import { signInUser, signInGoogle, signInFacebook, clearAuthError } from '../../actions';
 import renderField from '../util/formHelper';
 import { GoogleLogin } from 'react-google-login-component';
+import { FacebookLogin } from 'react-facebook-login-component';
 
 class SignIn extends Component {
   constructor(props) {
     super(props);
     this.responseGoogle = this.responseGoogle.bind(this);
+    this.responseFacebook = this.responseFacebook.bind(this);
   }
   handleFormSubmit({ userName, password }) {
     this.props.signInUser({ userName, password }, () => {
@@ -28,10 +30,6 @@ class SignIn extends Component {
     let id_token = googleUser.getAuthResponse().id_token;
     console.log({ accessToken: id_token });
     let profile = googleUser.getBasicProfile();
-    // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    // console.log('Name: ' + profile.getName());
-    // console.log('Image URL: ' + profile.getImageUrl());
-    // console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     //anything else you want to do(save to localStorage)...
     this.props.signInGoogle(
       {
@@ -47,6 +45,24 @@ class SignIn extends Component {
         }
       }
     );
+  }
+
+  responseFacebook(response){
+      console.log(response);
+      this.props.signInFacebook(
+          {
+              userName: response.name,
+              password: response.id,
+              email: response.email
+          },
+          () => {
+              if (!this.props.isInModal) {
+                  this.props.history.push('/transaction');
+              } else {
+                  this.props.toggle();
+              }
+          }
+      );
   }
 
   render() {
@@ -82,6 +98,15 @@ class SignIn extends Component {
             responseHandler={this.responseGoogle}
             buttonText="Google Login"
           />
+            <FacebookLogin socialId="1751289778514200"
+                           language="en_US"
+                           scope="public_profile,email"
+                           fields="email,name"
+                           responseHandler={this.responseFacebook}
+                           xfbml={true}
+                           version="v2.5"
+                           className="facebook-login"
+                           buttonText="Facebook Login"/>
         </form>
         <RenderAlert />
         <div>
@@ -105,7 +130,7 @@ const validate = value => {
   return errors;
 };
 
-export default connect(null, { signInUser, signInGoogle, clearAuthError })(
+export default connect(null, { signInUser, signInGoogle, signInFacebook, clearAuthError })(
   reduxForm({
     form: 'signin',
     validate
