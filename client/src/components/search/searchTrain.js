@@ -50,12 +50,25 @@ class SearchTrain extends Component {
     if (!form.goTime) {
       error.goTime = 'Go time missing';
     }
+    // let now = new Date();
+    // let thirtyDay = new Date();
+    // thirtyDay.setDate(now.getDate() + 30);
+
+    // if (form.goTime < now) {
+    //   error.goLessThanNow = 'Can not searh go time less than now';
+    // }
+
+    // if (form.goTime > thirtyDay) {
+    //   error.goGreaterThanThirdyDay =
+    //     'Can not search go time greater than thirty days';
+    // }
+
     if (form.round) {
       if (!form.backTime) {
         error.backTime = 'Back time missing';
       }
       if (form.backTime < form.goTime) {
-        console.log('backTime < goTime');
+        // console.log('backTime < goTime');
         error.timeError = 'Back time is smaller than go time';
       }
       if (!form.backStartStation) {
@@ -63,6 +76,10 @@ class SearchTrain extends Component {
       }
       if (!form.backEndStation) {
         error.backEndStation = 'Back end station is missing';
+      }
+      if (form.backTime > thirtyDay) {
+        error.backGreaterThanThirdyDay =
+          'Can not search back time greater than thirty days';
       }
     }
     return error;
@@ -102,12 +119,17 @@ class SearchTrain extends Component {
       } else {
         res.fast = false;
       }
+      if (formProps.exactly) {
+        res.exactly = formProps.exactly;
+      } else {
+        res.exactly = false;
+      }
       console.log(res);
       this.props.searchTrainList(res);
     }
   }
   clearForm(event) {
-    event.preventDefault();
+    // event.preventDefault();
     this.props.reset('searchtrain');
   }
 
@@ -118,7 +140,7 @@ class SearchTrain extends Component {
 
     return (
       <div style={{ maxWidth: '500px' }}>
-        <form onSubmit={handleSubmit(this.onSubmit.bind(this, searchTrain))}>
+        <form>
           <div>
             <div>
               <label>Fast Train</label>{' '}
@@ -221,13 +243,13 @@ class SearchTrain extends Component {
             )}
           </div>
           <div>
-            <button className="search-btn" type="submit">
-              Search
-            </button>{' '}
             <button
               className="search-btn"
-              onClick={this.clearForm.bind(this)}
+              onClick={handleSubmit(this.onSubmit.bind(this, searchTrain))}
             >
+              Search
+            </button>{' '}
+            <button className="search-btn" onClick={this.clearForm.bind(this)}>
               Reset
             </button>
           </div>
