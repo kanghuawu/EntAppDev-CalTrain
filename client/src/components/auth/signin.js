@@ -39,7 +39,13 @@ class SignIn extends Component {
         password: profile.getId(),
         email: profile.getEmail()
       },
-      () => this.props.history.push('/transaction')
+      () => {
+        if (!this.props.isInModal) {
+          this.props.history.push('/transaction');
+        } else {
+          this.props.toggle();
+        }
+      }
     );
   }
 
