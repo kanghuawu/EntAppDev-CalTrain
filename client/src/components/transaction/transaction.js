@@ -11,8 +11,8 @@ import {
     Table
 } from 'react-bootstrap';
 
-// const ROOT_URL = "http://localhost:7000";
-const ROOT_URL = '';
+const ROOT_URL = "http://localhost:7000";
+// const ROOT_URL = '';
 
 const modalStyle = {
     position: 'fixed',
