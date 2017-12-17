@@ -275,7 +275,8 @@ class Admin extends React.Component {
     hideModal() {
         let tempData = this.state.data;
         tempData.showModal = false;
-        this.setState({ tempData });
+        this.setState({tempData});
+        window.location.reload();
     }
     handleSelect(eventKey) {
         event.preventDefault();
