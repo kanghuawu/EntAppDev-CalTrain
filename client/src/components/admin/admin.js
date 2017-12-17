@@ -57,21 +57,16 @@ class Admin extends React.Component {
         this.updateRadio = this.updateRadio.bind(this);
         this.updateSubmitCancel = this.updateSubmitCancel.bind(this);
         this.processCancelResult = this.processCancelResult.bind(this);
-        this.processCancelResultError = this.processCancelResultError.bind(
-            this
-        );
+        this.processCancelResultError = this.processCancelResultError.bind(this);
         this.updateSubmitReset = this.updateSubmitReset.bind(this);
         this.processResetResult = this.processResetResult.bind(this);
         this.processResetError = this.processResetError.bind(this);
-        this.updateSubmitSystemReport = this.updateSubmitSystemReport.bind(
-            this
-        );
+        this.updateSubmitSystemReport = this.updateSubmitSystemReport.bind(this);
         this.processReportData = this.processReportData.bind(this);
         this.processAllData = this.processAllData.bind(this);
-        this.processSystemReportError = this.processSystemReportError.bind(
-            this
-        );
+        this.processSystemReportError = this.processSystemReportError.bind(this);
 
+        this.cleanUpUserInfo = this.cleanUpUserInfo.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.updateModal = this.updateModal.bind(this);
@@ -194,12 +189,14 @@ class Admin extends React.Component {
         }
 
         this.updateModal('Reset Ticket', subTitle, msg);
+        this.cleanUpUserInfo();
         this.showModal();
     }
     processResetError(error) {
         this.updateModal('Reset Ticket', 'Failed To Reset: ERROR', [
             error.message
         ]);
+        this.cleanUpUserInfo();
         this.showModal();
     }
     updateSubmitSystemReport(e) {
@@ -259,6 +256,9 @@ class Admin extends React.Component {
             error.message
         ]);
         this.showModal();
+    }
+    cleanUpUserInfo() {
+        localStorage.clear();
     }
     updateModal(title, subTitle, message) {
         let tempData = this.state.data;
