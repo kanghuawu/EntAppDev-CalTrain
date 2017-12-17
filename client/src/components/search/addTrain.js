@@ -250,13 +250,13 @@ class AddTrain extends Component {
               </div>
               <RenderAlert />
               <button
-                className="btn btn-primary"
+                className="search-btn"
                 onClick={handleSubmit(this.onSubmit.bind(this))}
               >
                 Purchase
               </button>{' '}
               <button
-                className="btn btn-secondary"
+                className="search-btn"
                 onClick={this.clearForm.bind(this)}
               >
                 Reset

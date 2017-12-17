@@ -20,12 +20,19 @@ export const renderSelectList = ({ input, data }) => (
 export const renderDateTimePicker = ({
   input: { onChange, value },
   showTime
-}) => (
-  <DateTimePicker
-    onChange={onChange}
-    format="DD MMM YYYY, HH:mm"
-    step={15}
-    time={showTime}
-    value={!value ? null : new Date(value)}
-  />
-);
+}) => {
+  let now = new Date();
+  let thirtyDay = new Date();
+  thirtyDay.setDate(now.getDate() + 30);
+  return (
+    <DateTimePicker
+      onChange={onChange}
+      format="DD MMM YYYY, HH:mm"
+      min={now}
+      max={thirtyDay}
+      step={15}
+      time={showTime}
+      value={!value ? null : new Date(value)}
+    />
+  );
+};
