@@ -65,6 +65,7 @@ class SearchTrain extends Component {
   }
 
   onSubmit(searchTrain, formProps) {
+    console.log(formProps);
     const error = this.validation(formProps);
     if (!_.isEmpty(error)) {
       this.props.showErrorModal(error);
@@ -87,6 +88,17 @@ class SearchTrain extends Component {
         res.backStartStation = formProps.backStartStation;
         res.backEndStation = formProps.backEndStation;
       }
+      if (formProps.normal) {
+        res.normal = formProps.normal;
+      } else {
+        res.normal = false;
+      }
+      if (formProps.fast) {
+        res.fast = formProps.fast;
+      } else {
+        res.fast = false;
+      }
+      // console.log(res);
       this.props.searchTrainList(res);
     }
   }
