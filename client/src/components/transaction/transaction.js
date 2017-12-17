@@ -163,10 +163,8 @@ class Transaction extends React.Component {
 class TransactionResult extends React.Component {
     render() {
         let rows = [];
-        let userName = '';
         if (this.props.transactionDataProp.length > 0) {
             rows = [];
-            userName = localStorage.getItem('userName');
             let goRows = [];
             let goRowsCont = [];
             let backRows = [];
@@ -326,7 +324,7 @@ class TransactionResult extends React.Component {
                     Transaction Record
                 </div>
                 <div className="transaction-table-user">
-                    User Name:&nbsp;{userName}
+                    User Name:&nbsp;{localStorage.getItem('userName')}
                 </div>
                 <Table responsive className="transaction-table">
                     <thead>
