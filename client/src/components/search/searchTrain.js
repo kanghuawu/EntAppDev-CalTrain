@@ -51,14 +51,18 @@ class SearchTrain extends Component {
       error.goTime = 'Go time missing';
     }
     if (form.round) {
+      if (!form.backTime) {
+        error.backTime = 'Back time missing';
+      }
+      if (form.backTime < form.goTime) {
+        console.log('backTime < goTime');
+        error.timeError = 'Back time is smaller than go time';
+      }
       if (!form.backStartStation) {
         error.backStartStation = 'Back start station is missing';
       }
       if (!form.backEndStation) {
         error.backEndStation = 'Back end station is missing';
-      }
-      if (!form.backTime) {
-        error.backTime = 'Back time missing';
       }
     }
     return error;
@@ -98,7 +102,7 @@ class SearchTrain extends Component {
       } else {
         res.fast = false;
       }
-      // console.log(res);
+      console.log(res);
       this.props.searchTrainList(res);
     }
   }

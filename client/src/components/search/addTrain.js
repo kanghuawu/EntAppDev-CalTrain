@@ -100,9 +100,10 @@ class AddTrain extends Component {
     const password = localStorage.getItem('password');
     res.userName = userName;
     res.password = password;
+    console.log(res);
     this.props.createTransaction(res, () => {
-      this.props.history.push('/transaction');
       this.props.reset();
+      this.props.history.push('/transaction');
     });
   }
 
