@@ -136,7 +136,7 @@ class SearchTrain extends Component {
   render() {
     const { isRound, handleSubmit } = this.props;
     const searchTrain = true;
-    const connection = [1, 2, 3];
+    const connection = [0, 1, 2];
 
     return (
       <div style={{ maxWidth: '500px' }}>
