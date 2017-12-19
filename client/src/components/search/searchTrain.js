@@ -50,18 +50,18 @@ class SearchTrain extends Component {
     if (!form.goTime) {
       error.goTime = 'Go time missing';
     }
-    // let now = new Date();
-    // let thirtyDay = new Date();
-    // thirtyDay.setDate(now.getDate() + 30);
+    let now = new Date();
+    let thirtyDay = new Date();
+    thirtyDay.setDate(now.getDate() + 30);
 
-    // if (form.goTime < now) {
-    //   error.goLessThanNow = 'Can not searh go time less than now';
-    // }
+    if (form.goTime < now) {
+      error.goLessThanNow = 'Can not searh go time less than now';
+    }
 
-    // if (form.goTime > thirtyDay) {
-    //   error.goGreaterThanThirdyDay =
-    //     'Can not search go time greater than thirty days';
-    // }
+    if (form.goTime > thirtyDay) {
+      error.goGreaterThanThirdyDay =
+        'Can not search go time greater than thirty days';
+    }
 
     if (form.round) {
       if (!form.backTime) {
