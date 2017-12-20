@@ -3,18 +3,13 @@ import { connect } from 'react-redux';
 
 class RenderAlert extends Component {
   render() {
-    if (this.props.errorMessage.length === 0) {
+    if (!this.props.errorMessage) {
       return <div />;
     }
-    console.log('error');
     return (
       <div className="alert alert-danger">
         <strong>Oops!</strong>
-        <ul>
-          {this.props.errorMessage.map((error, index) => {
-            return <li key={index}>{error}</li>;
-          })}
-        </ul>
+        <p>{this.props.errorMessage}</p>
       </div>
     );
   }

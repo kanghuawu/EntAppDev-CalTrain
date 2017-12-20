@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://localhost:7000';
-// const ROOT_URL = '';
+// const ROOT_URL = 'http://localhost:7000';
+const ROOT_URL = '';
 
 export const AUTH_USER = 'auth_user';
 export const UNAUTH_USER = 'unauth_user';
@@ -35,6 +35,7 @@ export const signInUser = ({ userName, password }, callback) => {
           localStorage.setItem('userName', userName);
           localStorage.setItem('password', password);
           dispatch({ type: AUTH_USER });
+          dispatch({ type: CLEAR_AUTH_ERROR });
           if (callback) callback();
         } else {
           dispatch(authError(response.data.reason));
@@ -56,6 +57,7 @@ export const signInGoogle = ({ userName, password, email }, callback) => {
           localStorage.setItem('userName', userName);
           localStorage.setItem('password', password);
           dispatch({ type: AUTH_USER });
+          dispatch({ type: CLEAR_AUTH_ERROR });
           if (callback) callback();
         } else {
           dispatch(authError(response.data.reason));
@@ -77,6 +79,7 @@ export const signInFacebook = ({ userName, password, email }, callback) => {
           localStorage.setItem('userName', userName);
           localStorage.setItem('password', password);
           dispatch({ type: AUTH_USER });
+          dispatch({ type: CLEAR_AUTH_ERROR });
           if (callback) callback();
         } else {
           dispatch(authError(response.data.reason));
@@ -97,6 +100,7 @@ export const signUpUser = ({ userName, email, password }, callback) => {
           localStorage.setItem('userName', userName);
           localStorage.setItem('password', password);
           dispatch({ type: AUTH_USER });
+          dispatch({ type: CLEAR_AUTH_ERROR });
           if (callback) callback();
         } else {
           dispatch(authError(response.data.reason));

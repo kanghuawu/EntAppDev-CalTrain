@@ -14,8 +14,8 @@ export default (state = {}, action) => {
     case AUTH_ERROR:
       return { ...state, error: action.payload };
     case CLEAR_AUTH_ERROR:
-      return { ...state, error: [] };
+      return { ...state, error: '' };
     default:
-      return { ...state, error: [] };
+      return { ...state, error: '' };
   }
 };
