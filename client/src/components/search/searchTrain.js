@@ -38,7 +38,7 @@ class SearchTrain extends Component {
     if (!form.normal && !form.fast) {
       error.normal = 'Select at least normal or fast';
     }
-    if (!form.connection) {
+    if (!(form.connections >= 0 && form.connections <= 2)) {
       error.connection = 'Connection is missing';
     }
     if (!form.goStartStation) {
@@ -124,6 +124,7 @@ class SearchTrain extends Component {
       } else {
         res.exactly = false;
       }
+      res.connections = formProps.connections;
       console.log(res);
       this.props.searchTrainList(res);
     }
@@ -136,7 +137,7 @@ class SearchTrain extends Component {
   render() {
     const { isRound, handleSubmit } = this.props;
     const searchTrain = true;
-    const connection = [0, 1, 2];
+    const connections = [0, 1, 2];
 
     return (
       <div style={{ maxWidth: '500px' }}>
@@ -158,9 +159,9 @@ class SearchTrain extends Component {
             <div>
               <label>Connection</label>{' '}
               <Field
-                data={connection}
-                name="connection"
-                id="connection"
+                data={connections}
+                name="connections"
+                id="connections"
                 component={renderDropdownList}
               />
             </div>
