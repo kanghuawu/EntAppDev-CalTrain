@@ -11,7 +11,7 @@ import {
     Table
 } from 'react-bootstrap';
 
-// const ROOT_URL = "http://localhost:7000";
+// const ROOT_URL = 'http://localhost:7000';
 const ROOT_URL = '';
 
 const modalStyle = {
@@ -57,14 +57,20 @@ class Admin extends React.Component {
         this.updateRadio = this.updateRadio.bind(this);
         this.updateSubmitCancel = this.updateSubmitCancel.bind(this);
         this.processCancelResult = this.processCancelResult.bind(this);
-        this.processCancelResultError = this.processCancelResultError.bind(this);
+        this.processCancelResultError = this.processCancelResultError.bind(
+            this
+        );
         this.updateSubmitReset = this.updateSubmitReset.bind(this);
         this.processResetResult = this.processResetResult.bind(this);
         this.processResetError = this.processResetError.bind(this);
-        this.updateSubmitSystemReport = this.updateSubmitSystemReport.bind(this);
+        this.updateSubmitSystemReport = this.updateSubmitSystemReport.bind(
+            this
+        );
         this.processReportData = this.processReportData.bind(this);
         this.processAllData = this.processAllData.bind(this);
-        this.processSystemReportError = this.processSystemReportError.bind(this);
+        this.processSystemReportError = this.processSystemReportError.bind(
+            this
+        );
 
         this.cleanUpUserInfo = this.cleanUpUserInfo.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -107,17 +113,20 @@ class Admin extends React.Component {
         this.setState({ tempData });
     }
     updateSubmitCancel(e) {
+        let current = new Date();
+        current.setTime(current.getTime() + 3 * 3600000);
         if (
             typeof this.state.data.dateTime.getMonth === 'function' &&
-            this.state.data.cancelTrainName.length === 6
+            this.state.data.cancelTrainName.length === 6 &&
+            this.state.data.dateTime > current
         ) {
             // Process Date for year month and day
             // Process with cancelTrainName
             let para = {
                 trainName: this.state.data.cancelTrainName,
-                year: this.state.data.dateTime.getYear(),
-                month: this.state.data.dateTime.getMonth(),
-                day: this.state.data.dateTime.getDay()
+                year: this.state.data.dateTime.getFullYear(),
+                month: this.state.data.dateTime.getMonth() + 1,
+                day: this.state.data.dateTime.getDate()
             };
 
             axios
@@ -275,7 +284,7 @@ class Admin extends React.Component {
     hideModal() {
         let tempData = this.state.data;
         tempData.showModal = false;
-        this.setState({tempData});
+        this.setState({ tempData });
         window.location.reload();
     }
     handleSelect(eventKey) {
