@@ -46,6 +46,8 @@ class AddTrain extends Component {
   }
 
   onSubmit(formProps) {
+    console.log(formProps);
+    console.log(this.props.search);
     const error = this.validation(formProps);
     if (!this.props.auth) {
       this.props.showModal();
@@ -57,28 +59,22 @@ class AddTrain extends Component {
       return;
     }
 
-    const go = JSON.parse(
-      JSON.stringify(
-        this.props.search.goTripInfoAggregation.normalTrainTrips[
-          formProps.go
-        ] ||
-          this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]
-      ) || null
-    );
+    let go = {};
+    if (this.props.search.goTripInfoAggregation.normalTrainTrips && this.props.search.goTripInfoAggregation.normalTrainTrips[formProps.go]) {
+      go = JSON.parse(JSON.stringify(this.props.search.goTripInfoAggregation.normalTrainTrips[formProps.go]));
+    } 
+    if (this.props.search.goTripInfoAggregation.fastTrainTrips && this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]) {
+      go = JSON.parse(JSON.stringify(this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]));
+    }
 
     let back = {};
     if (formProps.back) {
-      back = JSON.parse(
-        JSON.stringify(
-          this.props.search.backTripInfoAggregation.normalTrainTrips[
-            formProps.back
-          ] ||
-            this.props.search.backTripInfoAggregation.fastTrainTrips[
-              formProps.back
-            ] ||
-            null
-        )
-      );
+      if (this.props.search.backTripInfoAggregation.normalTrainTrips && this.props.search.backTripInfoAggregation.normalTrainTrips[formProps.back]) {
+      back = JSON.parse(JSON.stringify(this.props.search.backTripInfoAggregation.normalTrainTrips[formProps.back]));
+    } 
+    if (this.props.search.backTripInfoAggregation.fastTrainTrips && this.props.search.backTripInfoAggregation.fastTrainTrips[formProps.back]) {
+      back = JSON.parse(JSON.stringify(this.props.search.backTripInfoAggregation.fastTrainTrips[formProps.back]));
+    }
     }
 
     const res = {};
