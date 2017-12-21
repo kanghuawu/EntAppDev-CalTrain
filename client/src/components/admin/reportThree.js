@@ -63,6 +63,7 @@ class ReportThree extends Component {
             <li key={7}>Any Percentage: {this.props.report.anyPercentage}</li>
             <li key={8}>Non Average: {this.props.report.noneAverage}</li>
             <li key={9}>One Average: {this.props.report.oneAverage}</li>
+            <li key={9}>Any Average: {this.props.report.anyAverage}</li>
           </ul>
         )}
       </div>
