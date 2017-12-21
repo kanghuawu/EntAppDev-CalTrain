@@ -15,7 +15,7 @@ export default [
   'N',
   'O',
   'P',
-  'P',
+  'Q',
   'R',
   'S',
   'T',
