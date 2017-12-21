@@ -215,3 +215,47 @@ export const txnError = error => {
 // export const clearForm = (formName) => {
 //   return dispatch => dispatch(reset)
 // }
+
+export const REPORT_ONE = 'report_one';
+export const generateReportOne = data => {
+  return dispatch => {
+    axios
+      .post(`${ROOT_URL}/api/report/perTrain`, data)
+      .then(response => {
+        dispatch({ type: REPORT_ONE, payload: response.data.rate });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+};
+
+export const REPORT_TWO = 'report_two';
+export const generateReportTwo = data => {
+  return dispatch => {
+    axios
+      .post(`${ROOT_URL}/api/report/whole`, data)
+      .then(response => {
+        dispatch({ type: REPORT_TWO, payload: response.data.rate });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+};
+
+export const REPORT_THREE = 'report_three';
+export const generateReportThree = data => {
+  return dispatch => {
+    axios
+      .post(`${ROOT_URL}/api/report/state`, data)
+      .then(response => {
+        dispatch({ type: REPORT_THREE, payload: response.data });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+};
+
+export const CLEAR_REPORT = 'clear_report';

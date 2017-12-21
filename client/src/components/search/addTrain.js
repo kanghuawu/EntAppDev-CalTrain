@@ -60,21 +60,55 @@ class AddTrain extends Component {
     }
 
     let go = {};
-    if (this.props.search.goTripInfoAggregation.normalTrainTrips && this.props.search.goTripInfoAggregation.normalTrainTrips[formProps.go]) {
-      go = JSON.parse(JSON.stringify(this.props.search.goTripInfoAggregation.normalTrainTrips[formProps.go]));
-    } 
-    if (this.props.search.goTripInfoAggregation.fastTrainTrips && this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]) {
-      go = JSON.parse(JSON.stringify(this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]));
+    if (
+      this.props.search.goTripInfoAggregation.normalTrainTrips &&
+      this.props.search.goTripInfoAggregation.normalTrainTrips[formProps.go]
+    ) {
+      go = JSON.parse(
+        JSON.stringify(
+          this.props.search.goTripInfoAggregation.normalTrainTrips[formProps.go]
+        )
+      );
+    }
+    if (
+      this.props.search.goTripInfoAggregation.fastTrainTrips &&
+      this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]
+    ) {
+      go = JSON.parse(
+        JSON.stringify(
+          this.props.search.goTripInfoAggregation.fastTrainTrips[formProps.go]
+        )
+      );
     }
 
     let back = {};
     if (formProps.back) {
-      if (this.props.search.backTripInfoAggregation.normalTrainTrips && this.props.search.backTripInfoAggregation.normalTrainTrips[formProps.back]) {
-      back = JSON.parse(JSON.stringify(this.props.search.backTripInfoAggregation.normalTrainTrips[formProps.back]));
-    } 
-    if (this.props.search.backTripInfoAggregation.fastTrainTrips && this.props.search.backTripInfoAggregation.fastTrainTrips[formProps.back]) {
-      back = JSON.parse(JSON.stringify(this.props.search.backTripInfoAggregation.fastTrainTrips[formProps.back]));
-    }
+      if (
+        this.props.search.backTripInfoAggregation.normalTrainTrips &&
+        this.props.search.backTripInfoAggregation.normalTrainTrips[
+          formProps.back
+        ]
+      ) {
+        back = JSON.parse(
+          JSON.stringify(
+            this.props.search.backTripInfoAggregation.normalTrainTrips[
+              formProps.back
+            ]
+          )
+        );
+      }
+      if (
+        this.props.search.backTripInfoAggregation.fastTrainTrips &&
+        this.props.search.backTripInfoAggregation.fastTrainTrips[formProps.back]
+      ) {
+        back = JSON.parse(
+          JSON.stringify(
+            this.props.search.backTripInfoAggregation.fastTrainTrips[
+              formProps.back
+            ]
+          )
+        );
+      }
     }
 
     const res = {};

@@ -34,6 +34,7 @@ function format(old) {
 export default (state = {}, action) => {
   switch (action.type) {
     case SEARCH_LIST:
+      console.log(action.payload);
       const data = action.payload;
       if (data.round) {
         if (data.backTripInfoAggregation.normal) {

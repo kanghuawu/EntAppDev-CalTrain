@@ -10,6 +10,7 @@ import Search from './search';
 import Admin from './admin/admin.js';
 import Transaction from './transaction/transaction.js';
 import App from './app';
+import Report from './admin/report';
 
 export default () => {
     return (
@@ -23,6 +24,7 @@ export default () => {
                         <Route path="/signout" component={Signout} />
                         <Route path="/search" component={Search} />
                         <Route path="/admin" component={Admin} />
+                        <Route path="/report" component={Report} />
                         <Route
                             path="/transaction"
                             component={RequireAuth(Transaction)}
