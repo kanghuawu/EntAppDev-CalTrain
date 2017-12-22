@@ -71,6 +71,14 @@ class SearchTrain extends Component {
         // console.log('backTime < goTime');
         error.timeError = 'Back time is smaller than go time';
       }
+      let sevenDay = new Date();
+      sevenDay.setTime(sevenDay.getTime() + 7 * 24 * 60 * 60 * 1000);
+      console.log(sevenDay);
+      if (form.backTime > sevenDay) {
+        // console.log('backTime < goTime');
+        error.timeSevenError =
+          'Back time is greater than go time for more than 7 days';
+      }
       if (!form.backStartStation) {
         error.backStartStation = 'Back start station is missing';
       }
